@@ -9,22 +9,53 @@ import { Platform } from 'react-native';
 
 export const Colors = {
   light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
+    text: '#11131A',
+    textSecondary: '#6B7280',
+    background: '#FFFFFF',
+    backgroundElement: '#F4F5F7', // cards / inputs
+    backgroundSelected: '#E6E8EC',
+    border: '#E6E8EC',
+    danger: '#E5484D',
+    success: '#30A46C',
   },
   dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
+    text: '#F5F6F8',
+    textSecondary: '#9BA1AC',
+    background: '#0B0C10', // soft near-black, not harsh #000
+    backgroundElement: '#16181D',
+    backgroundSelected: '#24262E',
+    border: '#24262E',
+    danger: '#FF6369',
+    success: '#3DD68C',
   },
 } as const;
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
+
+/** Seatmate brand colors (same blue as the splash screen). */
+export const Brand = {
+  primary: '#208AEF',
+  primaryDark: '#1769C9',
+  onPrimary: '#ffffff',
+} as const;
+
+/**
+ * Brand color at low opacity — for soft category backgrounds and subtle
+ * highlights (the 5% accent from the 60/30/10 rule). Append to any hex color.
+ */
+export const Alpha = {
+  soft: '22', // ~13%
+  faint: '14', // ~8%
+} as const;
+
+/** A soft, theme-tinted shadow preset (never harsh gray/black). */
+export const softShadow = {
+  shadowColor: '#0B1220',
+  shadowOpacity: 0.08,
+  shadowRadius: 16,
+  shadowOffset: { width: 0, height: 6 },
+  elevation: 3,
+} as const;
 
 export const Fonts = Platform.select({
   ios: {
