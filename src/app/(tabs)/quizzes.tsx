@@ -102,6 +102,7 @@ export default function QuizzesScreen() {
     const knownMax = quiz.maxScore > 0;
     const effectiveMax = knownMax ? quiz.maxScore : Number(outOfStr);
     if (!knownMax && !(effectiveMax > 0)) return; // secret quiz needs a revealed total
+    if (score > effectiveMax) return; // can't score more than the total (guarded in the row UI)
     setQuizScore(quiz.id, score, knownMax ? undefined : effectiveMax);
     setReaction(
       getLine(profile.companionId, scoreTrigger(score, effectiveMax), {
@@ -343,8 +344,25 @@ function QuizRow({
 }) {
   const [score, setScore] = useState('');
   const [outOf, setOutOf] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const taken = quiz.score !== null;
   const secret = quiz.maxScore === 0;
+
+  function handleLog() {
+    const s = Number(score);
+    const max = secret ? Number(outOf) : quiz.maxScore;
+    if (!Number.isFinite(s)) return;
+    if (secret && !(max > 0)) {
+      setError('Enter the total points first.');
+      return;
+    }
+    if (s > max) {
+      setError(`Score can't be more than the total (${max}).`);
+      return;
+    }
+    setError(null);
+    onSaveScore(quiz, score, outOf);
+  }
 
   return (
     <View style={[styles.card, { backgroundColor: theme.backgroundElement }]}>
@@ -383,41 +401,52 @@ function QuizRow({
       </View>
 
       {!taken && (
-        <View style={styles.row}>
-          <TextInput
-            style={[styles.input, styles.flex, { backgroundColor: theme.background, color: theme.text }]}
-            placeholder="Score"
-            placeholderTextColor={theme.textSecondary}
-            value={score}
-            onChangeText={(t) => setScore(t.replace(/[^0-9]/g, ''))}
-            keyboardType="number-pad"
-          />
-          {secret && (
-            <>
+        <View style={styles.scoreBlock}>
+          <View style={styles.row}>
+            <TextInput
+              style={[styles.input, styles.flex, { backgroundColor: theme.background, color: theme.text }]}
+              placeholder="Score"
+              placeholderTextColor={theme.textSecondary}
+              value={score}
+              onChangeText={(t) => { setScore(t.replace(/[^0-9]/g, '')); setError(null); }}
+              keyboardType="number-pad"
+            />
+            {secret ? (
+              <>
+                <ThemedText type="default" themeColor="textSecondary" style={styles.outOf}>
+                  /
+                </ThemedText>
+                <TextInput
+                  style={[styles.input, styles.outOfInput, { backgroundColor: theme.background, color: theme.text }]}
+                  placeholder="Total"
+                  placeholderTextColor={theme.textSecondary}
+                  value={outOf}
+                  onChangeText={(t) => { setOutOf(t.replace(/[^0-9]/g, '')); setError(null); }}
+                  keyboardType="number-pad"
+                />
+              </>
+            ) : (
               <ThemedText type="default" themeColor="textSecondary" style={styles.outOf}>
-                /
+                / {quiz.maxScore}
               </ThemedText>
-              <TextInput
-                style={[styles.input, styles.outOfInput, { backgroundColor: theme.background, color: theme.text }]}
-                placeholder="Total"
-                placeholderTextColor={theme.textSecondary}
-                value={outOf}
-                onChangeText={(t) => setOutOf(t.replace(/[^0-9]/g, ''))}
-                keyboardType="number-pad"
-              />
-            </>
-          )}
-          <Pressable
-            onPress={() => onSaveScore(quiz, score, outOf)}
-            disabled={!score || (secret && !outOf)}
-            style={[
-              styles.logBtn,
-              { backgroundColor: score && (!secret || outOf) ? Brand.primary : theme.backgroundSelected },
-            ]}>
-            <ThemedText type="smallBold" style={{ color: Brand.onPrimary }}>
-              Log
+            )}
+            <Pressable
+              onPress={handleLog}
+              disabled={!score || (secret && !outOf)}
+              style={[
+                styles.logBtn,
+                { backgroundColor: score && (!secret || outOf) ? Brand.primary : theme.backgroundSelected },
+              ]}>
+              <ThemedText type="smallBold" style={{ color: Brand.onPrimary }}>
+                Log
+              </ThemedText>
+            </Pressable>
+          </View>
+          {error && (
+            <ThemedText type="small" style={{ color: theme.danger }}>
+              {error}
             </ThemedText>
-          </Pressable>
+          )}
         </View>
       )}
     </View>
@@ -447,6 +476,7 @@ const styles = StyleSheet.create({
   logBtn: { borderRadius: Spacing.three, paddingHorizontal: Spacing.four, justifyContent: 'center', alignItems: 'center' },
   outOf: { paddingHorizontal: 2 },
   outOfInput: { width: 80 },
+  scoreBlock: { gap: Spacing.two },
   list: { gap: Spacing.three, paddingBottom: Spacing.six },
   card: { borderRadius: Spacing.four, padding: Spacing.three, gap: Spacing.three },
   cardTop: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.three },
