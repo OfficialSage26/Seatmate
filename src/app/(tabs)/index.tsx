@@ -8,7 +8,7 @@ import { ThemedView } from '@/components/themed-view';
 import { getCompanion } from '@/companions/companions';
 import { getLine } from '@/companions/dialogue';
 import type { TriggerKey } from '@/companions/types';
-import { Alpha, Spacing, softShadow } from '@/constants/theme';
+import { Alpha, FloatingTabBarSpace, Spacing, softShadow } from '@/constants/theme';
 import { countSubjects } from '@/db/repositories/subjects';
 import { countTakenQuizzes, listUpcomingQuizzes } from '@/db/repositories/quizzes';
 import { useTheme } from '@/hooks/use-theme';
@@ -108,7 +108,7 @@ function StatCard({
 const styles = StyleSheet.create({
   container: { flex: 1 },
   safe: { flex: 1 },
-  content: { padding: Spacing.four, gap: Spacing.four },
+  content: { padding: Spacing.four, gap: Spacing.four, paddingBottom: FloatingTabBarSpace },
   companionBlock: { alignItems: 'center', gap: Spacing.three, marginTop: Spacing.two },
   glow: {
     position: 'absolute',

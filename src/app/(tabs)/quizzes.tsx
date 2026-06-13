@@ -1,5 +1,6 @@
-import { useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -8,7 +9,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { getLine } from '@/companions/dialogue';
 import type { TriggerKey } from '@/companions/types';
-import { Alpha, Brand, Spacing, softShadow } from '@/constants/theme';
+import { Alpha, Brand, FloatingTabBarSpace, Spacing, softShadow } from '@/constants/theme';
 import {
   addQuiz,
   addSurpriseQuiz,
@@ -49,6 +50,14 @@ export default function QuizzesScreen() {
 
   // Regular add form
   const [showForm, setShowForm] = useState(false);
+
+  // The bottom navbar's "+" button routes here with a fresh `new` param,
+  // which pops the add form open.
+  const { new: openForm } = useLocalSearchParams<{ new?: string }>();
+  useEffect(() => {
+    if (openForm) setShowForm(true);
+  }, [openForm]);
+
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
   const [date, setDate] = useState<string | null>(null);
@@ -126,7 +135,7 @@ export default function QuizzesScreen() {
               onPress={() => setShowSurprise(true)}
               style={[styles.surpriseBtn, { borderColor: Brand.primary }]}>
               <ThemedText type="smallBold" style={{ color: Brand.primary }}>
-                ⚡ Surprise
+                <Ionicons name="flash" size={13} color={Brand.primary} /> Surprise
               </ThemedText>
             </Pressable>
             <Pressable
@@ -142,7 +151,7 @@ export default function QuizzesScreen() {
         {reaction && (
           <View style={[styles.reaction, { backgroundColor: Brand.primary + Alpha.soft }]}>
             <ThemedText type="small" style={{ color: theme.text }}>
-              💬 {reaction}
+              <Ionicons name="chatbubble-ellipses" size={13} color={Brand.primary} /> {reaction}
             </ThemedText>
           </View>
         )}
@@ -165,9 +174,10 @@ export default function QuizzesScreen() {
             />
 
             {/* Date via calendar */}
-            <Pressable onPress={() => setShowCalendar(true)} style={inputStyle}>
+            <Pressable onPress={() => setShowCalendar(true)} style={[inputStyle, styles.dateBtn]}>
+              <Ionicons name="calendar-outline" size={18} color={date ? theme.text : theme.textSecondary} />
               <ThemedText type="default" style={{ color: date ? theme.text : theme.textSecondary }}>
-                {date ? `📅  ${formatDate(date)}` : '📅  Pick a date'}
+                {date ? formatDate(date) : 'Pick a date'}
               </ThemedText>
             </Pressable>
 
@@ -178,11 +188,11 @@ export default function QuizzesScreen() {
                   styles.checkbox,
                   { borderColor: theme.textSecondary, backgroundColor: secret ? Brand.primary : 'transparent' },
                 ]}>
-                {secret && <ThemedText style={{ color: Brand.onPrimary, fontSize: 12 }}>✓</ThemedText>}
+                {secret && <Ionicons name="checkmark" size={16} color={Brand.onPrimary} />}
               </View>
               <View style={styles.flex}>
                 <ThemedText type="small" style={{ fontWeight: '600' }}>
-                  Keep the total a secret 🔒
+                  Keep the total a secret <Ionicons name="lock-closed" size={12} color={theme.textSecondary} />
                 </ThemedText>
                 <ThemedText type="small" themeColor="textSecondary">
                   You&apos;ll enter the total when you log your score.
@@ -221,13 +231,13 @@ export default function QuizzesScreen() {
           {quizzes.length === 0 ? (
             <View style={styles.empty}>
               <View style={[styles.emptyBadge, { backgroundColor: Brand.primary + Alpha.soft }]}>
-                <ThemedText style={styles.emptyEmoji}>📝</ThemedText>
+                <Ionicons name="clipboard" size={40} color={Brand.primary} />
               </View>
               <ThemedText type="default" style={{ fontWeight: '700' }}>
                 No quizzes yet
               </ThemedText>
               <ThemedText type="small" themeColor="textSecondary" style={styles.center}>
-                Tap “+ Quiz” to track one, or log a “⚡ Surprise” pop quiz.
+                Tap “+ Quiz” to track one, or log a “Surprise” pop quiz.
               </ThemedText>
             </View>
           ) : (
@@ -256,7 +266,9 @@ export default function QuizzesScreen() {
         <Pressable style={styles.backdrop} onPress={() => setShowSurprise(false)}>
           <Pressable style={[styles.sheet, { backgroundColor: theme.background }]} onPress={() => {}}>
             <View style={[styles.handle, { backgroundColor: theme.backgroundSelected }]} />
-            <ThemedText type="subtitle">⚡ Surprise quiz</ThemedText>
+            <ThemedText type="subtitle">
+              <Ionicons name="flash" size={26} color={Brand.primary} /> Surprise quiz
+            </ThemedText>
             <ThemedText type="small" themeColor="textSecondary" style={{ marginBottom: Spacing.two }}>
               Got ambushed? Log it for today — the total stays secret until you reveal your score.
             </ThemedText>
@@ -372,7 +384,7 @@ function QuizRow({
             {quiz.isSurprise === 1 && (
               <View style={[styles.badge, { backgroundColor: Brand.primary + Alpha.soft }]}>
                 <ThemedText type="small" style={{ color: Brand.primary, fontWeight: '700' }}>
-                  ⚡ Surprise
+                  <Ionicons name="flash" size={11} color={Brand.primary} /> Surprise
                 </ThemedText>
               </View>
             )}
@@ -382,7 +394,7 @@ function QuizRow({
           </View>
           <ThemedText type="small" themeColor="textSecondary">
             {quiz.subject} · {formatDate(quiz.date)}
-            {secret && !taken ? ' · total secret 🔒' : ''}
+            {secret && !taken ? ' · total hidden' : ''}
           </ThemedText>
         </View>
         {taken ? (
@@ -472,12 +484,13 @@ const styles = StyleSheet.create({
   toggleRow: { flexDirection: 'row', gap: Spacing.three, alignItems: 'center' },
   checkbox: { width: 24, height: 24, borderRadius: 6, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
   input: { borderRadius: Spacing.three, paddingHorizontal: Spacing.three, paddingVertical: Spacing.three, fontSize: 16 },
+  dateBtn: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
   saveBtn: { borderRadius: Spacing.three, paddingVertical: Spacing.three, alignItems: 'center' },
   logBtn: { borderRadius: Spacing.three, paddingHorizontal: Spacing.four, justifyContent: 'center', alignItems: 'center' },
   outOf: { paddingHorizontal: 2 },
   outOfInput: { width: 80 },
   scoreBlock: { gap: Spacing.two },
-  list: { gap: Spacing.three, paddingBottom: Spacing.six },
+  list: { gap: Spacing.three, paddingBottom: FloatingTabBarSpace },
   card: { borderRadius: Spacing.four, padding: Spacing.three, gap: Spacing.three },
   cardTop: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.three },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, flexWrap: 'wrap' },
@@ -485,7 +498,6 @@ const styles = StyleSheet.create({
   scorePill: { paddingHorizontal: Spacing.three, paddingVertical: Spacing.one, borderRadius: 999 },
   empty: { alignItems: 'center', gap: Spacing.two, marginTop: Spacing.six },
   emptyBadge: { width: 88, height: 88, borderRadius: 44, alignItems: 'center', justifyContent: 'center', marginBottom: Spacing.two },
-  emptyEmoji: { fontSize: 44 },
   center: { textAlign: 'center', paddingHorizontal: Spacing.five },
   // surprise modal
   backdrop: { flex: 1, justifyContent: 'flex-end', backgroundColor: '#00000066' },

@@ -4,6 +4,7 @@
  * Used for grade/year and the date-of-birth pickers in onboarding.
  */
 
+import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
@@ -87,11 +88,7 @@ export function Dropdown({ value, placeholder, sections, onChange, title }: Prop
                           style={{ color: selected ? Brand.onPrimary : theme.text }}>
                           {opt.label}
                         </ThemedText>
-                        {selected && (
-                          <ThemedText type="default" style={{ color: Brand.onPrimary }}>
-                            ✓
-                          </ThemedText>
-                        )}
+                        {selected && <Ionicons name="checkmark" size={18} color={Brand.onPrimary} />}
                       </Pressable>
                     );
                   })}

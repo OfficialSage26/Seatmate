@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
@@ -51,18 +52,18 @@ export default function SettingsIndex() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={[styles.group, { backgroundColor: theme.backgroundElement }]}>
           <Row
-            icon="🎨"
+            icon="color-palette-outline"
             label="Appearance"
             value={THEME_LABELS[themePref]}
             theme={theme}
             onPress={() => router.push('/settings/appearance')}
           />
           <Divider theme={theme} />
-          <Row icon="ℹ️" label="About" theme={theme} onPress={() => router.push('/settings/about')} />
+          <Row icon="information-circle-outline" label="About" theme={theme} onPress={() => router.push('/settings/about')} />
         </View>
 
         <View style={[styles.group, { backgroundColor: theme.backgroundElement }]}>
-          <Row icon="🗑️" label="Reset data" danger theme={theme} onPress={confirmReset} />
+          <Row icon="trash-outline" label="Reset data" danger theme={theme} onPress={confirmReset} />
         </View>
 
         <ThemedText type="small" themeColor="textSecondary" style={styles.footer}>
@@ -81,7 +82,7 @@ function Row({
   theme,
   onPress,
 }: {
-  icon: string;
+  icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value?: string;
   danger?: boolean;
@@ -91,7 +92,7 @@ function Row({
   return (
     <Pressable onPress={onPress} style={styles.row}>
       <View style={[styles.iconWrap, { backgroundColor: theme.background }]}>
-        <ThemedText style={styles.icon}>{icon}</ThemedText>
+        <Ionicons name={icon} size={18} color={danger ? theme.danger : theme.text} />
       </View>
       <ThemedText type="default" style={[styles.flex, { color: danger ? theme.danger : theme.text, fontWeight: '600' }]}>
         {label}
@@ -101,11 +102,7 @@ function Row({
           {value}
         </ThemedText>
       )}
-      {!danger && (
-        <ThemedText type="default" themeColor="textSecondary">
-          ›
-        </ThemedText>
-      )}
+      {!danger && <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />}
     </Pressable>
   );
 }
@@ -120,7 +117,6 @@ const styles = StyleSheet.create({
   group: { borderRadius: Spacing.four, overflow: 'hidden' },
   row: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, padding: Spacing.three },
   iconWrap: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  icon: { fontSize: 18 },
   flex: { flex: 1 },
   divider: { height: StyleSheet.hairlineWidth, marginLeft: 64 },
   footer: { textAlign: 'center', paddingHorizontal: Spacing.four, marginTop: Spacing.two },

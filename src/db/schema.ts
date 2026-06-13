@@ -48,6 +48,15 @@ export type Quiz = {
   createdAt: string;
 };
 
+/** A free-form study note. */
+export type Note = {
+  id: number;
+  title: string;
+  body: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 /** Simple key/value store for app settings (theme preference, etc.). */
 export type SettingRow = { key: string; value: string };
 
@@ -83,6 +92,14 @@ CREATE TABLE IF NOT EXISTS quizzes (
   score     INTEGER,
   isSurprise INTEGER NOT NULL DEFAULT 0,
   createdAt TEXT    NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS notes (
+  id        INTEGER PRIMARY KEY AUTOINCREMENT,
+  title     TEXT    NOT NULL,
+  body      TEXT    NOT NULL DEFAULT '',
+  createdAt TEXT    NOT NULL,
+  updatedAt TEXT    NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS settings (

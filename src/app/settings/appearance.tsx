@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
@@ -7,10 +8,10 @@ import type { ThemePref } from '@/db/repositories/settings';
 import { useTheme } from '@/hooks/use-theme';
 import { useSettingsStore } from '@/store/settings';
 
-const OPTIONS: { value: ThemePref; label: string; emoji: string; hint: string }[] = [
-  { value: 'system', label: 'System', emoji: '📱', hint: 'Match your device setting' },
-  { value: 'light', label: 'Light', emoji: '☀️', hint: 'Always light' },
-  { value: 'dark', label: 'Dark', emoji: '🌙', hint: 'Always dark' },
+const OPTIONS: { value: ThemePref; label: string; icon: keyof typeof Ionicons.glyphMap; hint: string }[] = [
+  { value: 'system', label: 'System', icon: 'phone-portrait-outline', hint: 'Match your device setting' },
+  { value: 'light', label: 'Light', icon: 'sunny-outline', hint: 'Always light' },
+  { value: 'dark', label: 'Dark', icon: 'moon-outline', hint: 'Always dark' },
 ];
 
 export default function AppearanceSettings() {
@@ -39,8 +40,8 @@ export default function AppearanceSettings() {
                     borderColor: selected ? Brand.primary : 'transparent',
                   },
                 ]}>
-                <View style={[styles.emojiWrap, { backgroundColor: theme.background }]}>
-                  <ThemedText style={styles.emoji}>{o.emoji}</ThemedText>
+                <View style={[styles.iconWrap, { backgroundColor: theme.background }]}>
+                  <Ionicons name={o.icon} size={22} color={selected ? Brand.primary : theme.text} />
                 </View>
                 <View style={styles.flex}>
                   <ThemedText type="default" style={{ fontWeight: '700' }}>
@@ -78,8 +79,7 @@ const styles = StyleSheet.create({
     borderRadius: Spacing.four,
     borderWidth: 2,
   },
-  emojiWrap: { width: 44, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
-  emoji: { fontSize: 22 },
+  iconWrap: { width: 44, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   flex: { flex: 1 },
   radio: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
   radioDot: { width: 12, height: 12, borderRadius: 6 },

@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -142,7 +143,7 @@ export default function Onboarding() {
     step === 'welcome'
       ? 'Get Started'
       : step === 'companion'
-        ? `Choose ${COMPANIONS[companionIndex].name} →`
+        ? `Choose ${COMPANIONS[companionIndex].name}`
         : step === 'gender' && gender === null
           ? 'Skip'
           : 'Continue';
@@ -153,8 +154,9 @@ export default function Onboarding() {
         {/* Header: back + progress dots */}
         <View style={styles.header}>
           {stepIndex > 0 ? (
-            <Pressable onPress={goBack} hitSlop={12}>
-              <ThemedText type="default">‹ Back</ThemedText>
+            <Pressable onPress={goBack} hitSlop={12} style={styles.backBtn}>
+              <Ionicons name="chevron-back" size={18} color={theme.text} />
+              <ThemedText type="default">Back</ThemedText>
             </Pressable>
           ) : (
             <View style={{ width: 50 }} />
@@ -254,7 +256,7 @@ function Step(props: StepProps) {
     return (
       <View style={[styles.stepPad, styles.center]}>
         <View style={[styles.welcomeBadge, { backgroundColor: Brand.primary + Alpha.soft }]}>
-          <ThemedText style={styles.welcomeEmoji}>🎓</ThemedText>
+          <Ionicons name="school" size={56} color={Brand.primary} />
         </View>
         <ThemedText type="title" style={styles.centerText}>
           Welcome to{'\n'}Seatmate
@@ -312,7 +314,7 @@ function Step(props: StepProps) {
         {props.age !== null && (
           <View style={[styles.ageChip, { backgroundColor: Brand.primary + Alpha.soft }]}>
             <ThemedText type="default" style={{ color: Brand.primary, fontWeight: '700' }}>
-              You&apos;re {props.age} years old 🎂
+              You&apos;re {props.age} years old
             </ThemedText>
           </View>
         )}
@@ -321,11 +323,11 @@ function Step(props: StepProps) {
   }
 
   if (step === 'gender') {
-    const options: { value: ProfileGender; label: string; emoji: string }[] = [
-      { value: 'male', label: 'Male', emoji: '👦' },
-      { value: 'female', label: 'Female', emoji: '👧' },
-      { value: 'nonbinary', label: 'Non-binary', emoji: '🧑' },
-      { value: 'unspecified', label: 'Prefer not to say', emoji: '🤍' },
+    const options: { value: ProfileGender; label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
+      { value: 'male', label: 'Male', icon: 'male' },
+      { value: 'female', label: 'Female', icon: 'female' },
+      { value: 'nonbinary', label: 'Non-binary', icon: 'male-female' },
+      { value: 'unspecified', label: 'Prefer not to say', icon: 'help-circle-outline' },
     ];
     return (
       <View style={styles.stepPad}>
@@ -344,7 +346,7 @@ function Step(props: StepProps) {
                   styles.genderCard,
                   { backgroundColor: theme.backgroundElement, borderColor: selected ? Brand.primary : 'transparent' },
                 ]}>
-                <ThemedText style={styles.genderEmoji}>{o.emoji}</ThemedText>
+                <Ionicons name={o.icon} size={36} color={selected ? Brand.primary : theme.textSecondary} />
                 <ThemedText type="small" style={{ fontWeight: selected ? '700' : '500', textAlign: 'center' }}>
                   {o.label}
                 </ThemedText>
@@ -507,7 +509,7 @@ const styles = StyleSheet.create({
   gapBottom: { marginBottom: Spacing.three },
 
   welcomeBadge: { width: 120, height: 120, borderRadius: 60, alignItems: 'center', justifyContent: 'center' },
-  welcomeEmoji: { fontSize: 64 },
+  backBtn: { flexDirection: 'row', alignItems: 'center', gap: 2 },
 
   input: { borderRadius: Spacing.three, paddingHorizontal: Spacing.three, paddingVertical: Spacing.three, fontSize: 18 },
   row: { flexDirection: 'row', gap: Spacing.two },
@@ -523,7 +525,6 @@ const styles = StyleSheet.create({
     borderRadius: Spacing.four,
     borderWidth: 2,
   },
-  genderEmoji: { fontSize: 40 },
 
   // Carousel
   carouselArea: { flex: 1, justifyContent: 'center' },

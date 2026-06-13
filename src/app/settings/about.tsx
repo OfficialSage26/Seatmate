@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
@@ -16,7 +17,7 @@ export default function AboutSettings() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.hero}>
           <View style={[styles.logo, { backgroundColor: Brand.primary + Alpha.soft }]}>
-            <ThemedText style={styles.logoEmoji}>🎓</ThemedText>
+            <Ionicons name="school" size={44} color={Brand.primary} />
           </View>
           <ThemedText type="subtitle">Seatmate</ThemedText>
           <ThemedText type="small" themeColor="textSecondary">
@@ -32,7 +33,9 @@ export default function AboutSettings() {
         </View>
 
         <View style={[styles.card, { backgroundColor: theme.backgroundElement }]}>
-          <ThemedText type="smallBold">🔒 Private by design</ThemedText>
+          <ThemedText type="smallBold">
+            <Ionicons name="lock-closed" size={13} color={theme.text} /> Private by design
+          </ThemedText>
           <ThemedText type="small" themeColor="textSecondary">
             No account, no cloud, no internet required. Everything you enter stays on this device.
           </ThemedText>
@@ -55,7 +58,7 @@ export default function AboutSettings() {
         </View>
 
         <ThemedText type="small" themeColor="textSecondary" style={styles.footer}>
-          Made with care for students. 💙
+          Made with care for students.
         </ThemedText>
       </ScrollView>
     </ThemedView>
@@ -67,7 +70,6 @@ const styles = StyleSheet.create({
   content: { padding: Spacing.four, gap: Spacing.three },
   hero: { alignItems: 'center', gap: Spacing.one, marginVertical: Spacing.three },
   logo: { width: 88, height: 88, borderRadius: 24, alignItems: 'center', justifyContent: 'center', marginBottom: Spacing.two },
-  logoEmoji: { fontSize: 44 },
   card: { borderRadius: Spacing.four, padding: Spacing.four, gap: Spacing.two },
   companions: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.three, justifyContent: 'space-between' },
   companion: { alignItems: 'center', gap: Spacing.one, width: '22%' },

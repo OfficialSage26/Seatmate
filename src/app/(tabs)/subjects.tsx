@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
@@ -5,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Alpha, Brand, Spacing, softShadow } from '@/constants/theme';
+import { Alpha, Brand, FloatingTabBarSpace, Spacing, softShadow } from '@/constants/theme';
 import { SUBJECT_COLORS } from '@/constants/academic';
 import { addSubject, deleteSubject, listSubjects } from '@/db/repositories/subjects';
 import type { Subject } from '@/db/schema';
@@ -99,7 +100,7 @@ export default function SubjectsScreen() {
           {subjects.length === 0 ? (
             <View style={styles.empty}>
               <View style={[styles.emptyBadge, { backgroundColor: Brand.primary + Alpha.soft }]}>
-                <ThemedText style={styles.emptyEmoji}>📚</ThemedText>
+                <Ionicons name="book" size={40} color={Brand.primary} />
               </View>
               <ThemedText type="default" style={{ fontWeight: '700' }}>
                 No subjects yet
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
   swatchRow: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two },
   swatch: { width: 36, height: 36, borderRadius: 18, borderWidth: 3 },
   saveBtn: { borderRadius: Spacing.three, paddingVertical: Spacing.three, alignItems: 'center' },
-  list: { gap: Spacing.two, paddingBottom: Spacing.six },
+  list: { gap: Spacing.two, paddingBottom: FloatingTabBarSpace },
   card: {
     flexDirection: 'row',
     alignItems: 'center',

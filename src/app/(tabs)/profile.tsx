@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -5,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { COMPANIONS, getCompanion } from '@/companions/companions';
-import { Alpha, Spacing, softShadow } from '@/constants/theme';
+import { Alpha, FloatingTabBarSpace, Spacing, softShadow } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfileStore } from '@/store/profile';
 
@@ -50,7 +51,7 @@ export default function ProfileScreen() {
               </ThemedText>
               {birthday && (
                 <ThemedText type="small" themeColor="textSecondary">
-                  🎂 {birthday}
+                  <Ionicons name="gift-outline" size={12} color={theme.textSecondary} /> {birthday}
                 </ThemedText>
               )}
               <ThemedText type="small" style={{ color: current.color, marginTop: 2 }}>
@@ -91,14 +92,12 @@ export default function ProfileScreen() {
             onPress={() => router.push('/settings')}
             style={[styles.settingsRow, { backgroundColor: theme.backgroundElement }]}>
             <View style={[styles.settingsIcon, { backgroundColor: theme.background }]}>
-              <ThemedText style={styles.icon}>⚙️</ThemedText>
+              <Ionicons name="settings-outline" size={20} color={theme.text} />
             </View>
             <ThemedText type="default" style={[styles.flex, { fontWeight: '600' }]}>
               Settings
             </ThemedText>
-            <ThemedText type="default" themeColor="textSecondary">
-              ›
-            </ThemedText>
+            <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
           </Pressable>
         </ScrollView>
       </SafeAreaView>
@@ -109,7 +108,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   safe: { flex: 1, paddingHorizontal: Spacing.four, paddingTop: Spacing.three },
-  content: { gap: Spacing.three, paddingBottom: Spacing.six },
+  content: { gap: Spacing.three, paddingBottom: FloatingTabBarSpace },
   card: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, borderRadius: Spacing.four, padding: Spacing.four },
   avatar: { width: 68, height: 68, borderRadius: 34, alignItems: 'center', justifyContent: 'center' },
   emoji: { fontSize: 36 },
@@ -134,5 +133,4 @@ const styles = StyleSheet.create({
     marginTop: Spacing.two,
   },
   settingsIcon: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  icon: { fontSize: 18 },
 });

@@ -94,3 +94,10 @@ export const Spacing = {
 
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
 export const MaxContentWidth = 800;
+
+/**
+ * Vertical space a scroll view should leave at the bottom so its last items
+ * clear the floating bottom navbar (bar height + its raised FAB + margin).
+ * Add this to a screen's scroll `contentContainerStyle.paddingBottom`.
+ */
+export const FloatingTabBarSpace = 136;
