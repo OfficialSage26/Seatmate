@@ -1,11 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { COMPANIONS, getCompanion } from '@/companions/companions';
+import { getCompanion } from '@/companions/companions';
 import { Alpha, FloatingTabBarSpace, Spacing, softShadow } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfileStore } from '@/store/profile';
@@ -27,7 +27,6 @@ export default function ProfileScreen() {
   const theme = useTheme();
   const router = useRouter();
   const profile = useProfileStore((s) => s.profile)!;
-  const changeCompanion = useProfileStore((s) => s.changeCompanion);
   const current = getCompanion(profile.companionId);
   const birthday = formatBirthday(profile.birthday);
 
@@ -39,9 +38,7 @@ export default function ProfileScreen() {
 
           {/* Identity card */}
           <View style={[styles.card, { backgroundColor: theme.backgroundElement }, softShadow]}>
-            <View style={[styles.avatar, { backgroundColor: current.color + Alpha.soft }]}>
-              <ThemedText style={styles.emoji}>{current.emoji}</ThemedText>
-            </View>
+            <Image source={current.portrait} style={[styles.avatar, { backgroundColor: current.color + Alpha.soft }]} />
             <View style={styles.flex}>
               <ThemedText type="default" style={{ fontWeight: '700' }}>
                 {profile.name}
@@ -61,30 +58,20 @@ export default function ProfileScreen() {
             </View>
           </View>
 
-          {/* Companion switcher */}
+          {/* About Ella */}
           <ThemedText type="smallBold" style={{ marginTop: Spacing.two }}>
-            Change companion
+            Your seatmate
           </ThemedText>
-          <View style={styles.companionGrid}>
-            {COMPANIONS.map((c) => {
-              const selected = c.id === profile.companionId;
-              return (
-                <Pressable
-                  key={c.id}
-                  onPress={() => changeCompanion(c.id)}
-                  style={[
-                    styles.miniCard,
-                    { backgroundColor: theme.backgroundElement, borderColor: selected ? c.color : 'transparent' },
-                  ]}>
-                  <View style={[styles.miniAvatar, { backgroundColor: c.color + Alpha.soft }]}>
-                    <ThemedText style={styles.miniEmoji}>{c.emoji}</ThemedText>
-                  </View>
-                  <ThemedText type="small" style={{ fontWeight: selected ? '700' : '500' }}>
-                    {c.name}
-                  </ThemedText>
-                </Pressable>
-              );
-            })}
+          <View style={[styles.ellaCard, { backgroundColor: theme.backgroundElement }]}>
+            <Image source={current.portrait} style={[styles.miniAvatar, { backgroundColor: current.color + Alpha.soft }]} />
+            <View style={styles.flex}>
+              <ThemedText type="small" style={{ color: current.color, fontWeight: '700' }}>
+                {current.name}
+              </ThemedText>
+              <ThemedText type="small" themeColor="textSecondary">
+                {current.tagline}
+              </ThemedText>
+            </View>
           </View>
 
           {/* Settings entry */}
@@ -110,20 +97,16 @@ const styles = StyleSheet.create({
   safe: { flex: 1, paddingHorizontal: Spacing.four, paddingTop: Spacing.three },
   content: { gap: Spacing.three, paddingBottom: FloatingTabBarSpace },
   card: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, borderRadius: Spacing.four, padding: Spacing.four },
-  avatar: { width: 68, height: 68, borderRadius: 34, alignItems: 'center', justifyContent: 'center' },
-  emoji: { fontSize: 36 },
+  avatar: { width: 68, height: 68, borderRadius: 34 },
   flex: { flex: 1, gap: 2 },
-  companionGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two },
-  miniCard: {
-    width: '31%',
+  ellaCard: {
+    flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.one,
-    paddingVertical: Spacing.three,
-    borderRadius: Spacing.three,
-    borderWidth: 2,
+    gap: Spacing.three,
+    padding: Spacing.three,
+    borderRadius: Spacing.four,
   },
-  miniAvatar: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
-  miniEmoji: { fontSize: 24 },
+  miniAvatar: { width: 44, height: 44, borderRadius: 22 },
   settingsRow: {
     flexDirection: 'row',
     alignItems: 'center',

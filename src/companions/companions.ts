@@ -1,63 +1,29 @@
-/** The roster of pickable companions. Emoji are placeholders for real art. */
+/**
+ * The companion roster. For now Seatmate ships with a single companion, Ella.
+ * This stays an array (rather than a lone object) so additional companions can
+ * be slotted in later without changing how screens consume it.
+ *
+ * `emoji` is a placeholder for Ella's real character art — see
+ * `reference/ella-character-prompt.md` for the master art-style + character
+ * brief used to generate that art consistently.
+ */
 
 import type { Companion, CompanionId } from './types';
 
-export const COMPANIONS: Companion[] = [
-  {
-    id: 'juan',
-    name: 'Juan',
-    gender: 'male',
-    emoji: '😎',
-    color: '#F2994A',
-    tagline: 'Funny, mischievous — "boys at the back" energy.',
-    blurb: 'Cracks jokes and acts lazy, but he\'s surprisingly street-smart and always has your back.',
-  },
-  {
-    id: 'marco',
-    name: 'Marco',
-    gender: 'male',
-    emoji: '🤓',
-    color: '#2D9CDB',
-    tagline: 'Disciplined academic achiever.',
-    blurb: 'Focused and exacting. Holds you to a high standard and helps you build real study habits.',
-  },
-  {
-    id: 'renz',
-    name: 'Renz',
-    gender: 'male',
-    emoji: '🎮',
-    color: '#9B51E0',
-    tagline: 'Gamer who turns studying into quests.',
-    blurb: 'Treats every quiz like a boss fight and every study session like a mission. XP for everything.',
-  },
-  {
-    id: 'stacy',
-    name: 'Stacy',
-    gender: 'female',
-    emoji: '📋',
-    color: '#EB5757',
-    tagline: 'Strict-but-caring student leader.',
-    blurb: 'The responsible one. Pushes you to stay on top of things because she knows you can.',
-  },
-  {
-    id: 'bea',
-    name: 'Bea',
-    gender: 'female',
-    emoji: '💛',
-    color: '#F2C94C',
-    tagline: 'Cheerful, clingy, endlessly supportive.',
-    blurb: 'High energy and always in your corner. Celebrates every win like it\'s her own.',
-  },
-  {
-    id: 'ella',
-    name: 'Ella',
-    gender: 'female',
-    emoji: '🌿',
-    color: '#27AE60',
-    tagline: 'Calm, gentle, encouraging.',
-    blurb: 'A steady, reassuring presence. Helps you breathe, refocus, and keep going at your own pace.',
-  },
-];
+export const ELLA: Companion = {
+  id: 'ella',
+  name: 'Ella',
+  gender: 'female',
+  emoji: '🌿',
+  portrait: require('../../assets/images/Ella/ella-portrait.png'),
+  fullBody: require('../../assets/images/Ella/ella-full.png'),
+  color: '#27AE60',
+  tagline: 'Calm, gentle, encouraging.',
+  blurb:
+    'A steady, reassuring presence. Ella helps you breathe, refocus, and keep going at your own pace — one small step at a time.',
+};
+
+export const COMPANIONS: Companion[] = [ELLA];
 
 const BY_ID: Record<CompanionId, Companion> = Object.fromEntries(
   COMPANIONS.map((c) => [c.id, c]),

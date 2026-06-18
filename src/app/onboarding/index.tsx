@@ -4,13 +4,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   Easing,
-  FlatList,
+  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
   StyleSheet,
   TextInput,
-  useWindowDimensions,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,15 +17,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Dropdown, type DropdownSection } from '@/components/dropdown';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { COMPANIONS } from '@/companions/companions';
+import { ELLA } from '@/companions/companions';
 import { getLine } from '@/companions/dialogue';
-import type { Companion } from '@/companions/types';
 import { ageFromBirthday, daysInMonth, GRADE_SECTIONS, MONTHS } from '@/constants/academic';
 import { Alpha, Brand, Spacing, softShadow } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfileStore } from '@/store/profile';
 
-const STEPS = ['welcome', 'name', 'dob', 'gender', 'grade', 'companion'] as const;
+const STEPS = ['welcome', 'name', 'dob', 'gender', 'grade', 'ready'] as const;
 
 type ProfileGender = 'male' | 'female' | 'nonbinary' | 'unspecified';
 
@@ -45,7 +43,6 @@ export default function Onboarding() {
   const [year, setYear] = useState<string | null>(null);
   const [gender, setGender] = useState<ProfileGender | null>(null);
   const [gradeLevel, setGradeLevel] = useState<string | null>(null);
-  const [companionIndex, setCompanionIndex] = useState(0);
 
   const step = STEPS[stepIndex];
 
@@ -68,7 +65,7 @@ export default function Onboarding() {
         return true; // optional
       case 'grade':
         return gradeLevel !== null;
-      case 'companion':
+      case 'ready':
         return true;
     }
   })();
@@ -116,7 +113,7 @@ export default function Onboarding() {
       birthday,
       gender: gender ?? 'unspecified',
       gradeLevel: gradeLevel!,
-      companionId: COMPANIONS[companionIndex].id,
+      companionId: ELLA.id,
     });
     router.replace('/(tabs)');
   }
@@ -141,9 +138,9 @@ export default function Onboarding() {
 
   const buttonLabel =
     step === 'welcome'
-      ? 'Get Started'
-      : step === 'companion'
-        ? `Choose ${COMPANIONS[companionIndex].name}`
+      ? 'Nice to meet you'
+      : step === 'ready'
+        ? "Let's begin"
         : step === 'gender' && gender === null
           ? 'Skip'
           : 'Continue';
@@ -197,8 +194,6 @@ export default function Onboarding() {
               setGender={setGender}
               gradeLevel={gradeLevel}
               setGradeLevel={setGradeLevel}
-              companionIndex={companionIndex}
-              setCompanionIndex={setCompanionIndex}
               monthSections={monthSections}
               daySections={daySections}
               yearSections={yearSections}
@@ -242,8 +237,6 @@ type StepProps = {
   setGender: (v: ProfileGender) => void;
   gradeLevel: string | null;
   setGradeLevel: (v: string) => void;
-  companionIndex: number;
-  setCompanionIndex: (i: number) => void;
   monthSections: DropdownSection[];
   daySections: DropdownSection[];
   yearSections: DropdownSection[];
@@ -255,15 +248,18 @@ function Step(props: StepProps) {
   if (step === 'welcome') {
     return (
       <View style={[styles.stepPad, styles.center]}>
-        <View style={[styles.welcomeBadge, { backgroundColor: Brand.primary + Alpha.soft }]}>
-          <Ionicons name="school" size={56} color={Brand.primary} />
-        </View>
+        <EllaAvatar />
         <ThemedText type="title" style={styles.centerText}>
-          Welcome to{'\n'}Seatmate
+          Hi, I&apos;m Ella
         </ThemedText>
+        <View style={[styles.introBubble, { backgroundColor: theme.backgroundElement }, softShadow]}>
+          <ThemedText type="default" style={styles.centerText}>
+            {getLine(ELLA.id, 'onboarding_intro')}
+          </ThemedText>
+        </View>
         <ThemedText type="default" themeColor="textSecondary" style={styles.centerText}>
-          Your study buddy that actually has your back — track quizzes, subjects, and grades, with a
-          companion who keeps you company along the way.
+          Seatmate helps you keep track of your quizzes, subjects, and grades — and I&apos;ll be
+          right here to keep you company along the way.
         </ThemedText>
         <ThemedText type="small" themeColor="textSecondary" style={styles.centerText}>
           Works fully offline. No account needed.
@@ -272,13 +268,30 @@ function Step(props: StepProps) {
     );
   }
 
+  if (step === 'ready') {
+    return (
+      <View style={[styles.stepPad, styles.center]}>
+        <EllaAvatar />
+        <ThemedText type="title" style={styles.centerText}>
+          All set{props.name.trim() ? `, ${props.name.trim()}` : ''}
+        </ThemedText>
+        <View style={[styles.introBubble, { backgroundColor: theme.backgroundElement }, softShadow]}>
+          <ThemedText type="default" style={styles.centerText}>
+            {getLine(ELLA.id, 'onboarding_ready', { name: props.name.trim() || 'there' })}
+          </ThemedText>
+        </View>
+      </View>
+    );
+  }
+
   if (step === 'name') {
     return (
       <View style={styles.stepPad}>
-        <ThemedText type="subtitle">What should we call you?</ThemedText>
-        <ThemedText type="small" themeColor="textSecondary" style={styles.gapBottom}>
-          This is how your companion will greet you.
-        </ThemedText>
+        <EllaAsk
+          theme={theme}
+          question="First — what should I call you?"
+          hint="I'll use this whenever I greet you."
+        />
         <TextInput
           style={[styles.input, { backgroundColor: theme.backgroundElement, color: theme.text }]}
           value={props.name}
@@ -296,10 +309,11 @@ function Step(props: StepProps) {
   if (step === 'dob') {
     return (
       <View style={styles.stepPad}>
-        <ThemedText type="subtitle">When&apos;s your birthday?</ThemedText>
-        <ThemedText type="small" themeColor="textSecondary" style={styles.gapBottom}>
-          We&apos;ll work out your age automatically.
-        </ThemedText>
+        <EllaAsk
+          theme={theme}
+          question={`When's your birthday${props.name.trim() ? `, ${props.name.trim()}` : ''}?`}
+          hint="I'll work out your age from this — no need to type it."
+        />
         <View style={styles.row}>
           <View style={styles.flex2}>
             <Dropdown title="Month" placeholder="Month" value={props.month} sections={props.monthSections} onChange={props.setMonth} />
@@ -331,10 +345,11 @@ function Step(props: StepProps) {
     ];
     return (
       <View style={styles.stepPad}>
-        <ThemedText type="subtitle">Tell us about you</ThemedText>
-        <ThemedText type="small" themeColor="textSecondary" style={styles.gapBottom}>
-          Optional — pick what feels right, or skip.
-        </ThemedText>
+        <EllaAsk
+          theme={theme}
+          question={`How do you identify${props.name.trim() ? `, ${props.name.trim()}` : ''}?`}
+          hint="Totally optional — pick what feels right, or skip it."
+        />
         <View style={styles.genderGrid}>
           {options.map((o) => {
             const selected = props.gender === o.value;
@@ -361,129 +376,59 @@ function Step(props: StepProps) {
   if (step === 'grade') {
     return (
       <View style={styles.stepPad}>
-        <ThemedText type="subtitle">What year are you in?</ThemedText>
-        <ThemedText type="small" themeColor="textSecondary" style={styles.gapBottom}>
-          Pick your current grade or year level.
-        </ThemedText>
+        <EllaAsk
+          theme={theme}
+          question="And what year are you in right now?"
+          hint="So I can keep things relevant to you."
+        />
         <Dropdown placeholder="Select grade / year" value={props.gradeLevel} sections={GRADE_SECTIONS} onChange={props.setGradeLevel} />
       </View>
     );
   }
 
-  // step === 'companion'
-  return <CompanionCarousel index={props.companionIndex} onIndexChange={props.setCompanionIndex} />;
+  // `welcome` and `ready` are handled above; nothing else to render here.
+  return null;
 }
 
 // ───────────────────────────────────────────────────────────────────────────
-// Companion carousel (peek + scale/opacity motion)
+// Ella's avatar — a soft glow behind the (placeholder) character art.
 // ───────────────────────────────────────────────────────────────────────────
 
-// Cast back to `typeof FlatList` so JSX still infers the item type from `data`.
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList) as unknown as typeof FlatList;
-
-function CompanionCarousel({
-  index,
-  onIndexChange,
-}: {
-  index: number;
-  onIndexChange: (i: number) => void;
-}) {
-  const theme = useTheme();
-  const { width } = useWindowDimensions();
-  const ITEM_W = Math.round(width * 0.8);
-  const SIDE = (width - ITEM_W) / 2;
-  const scrollX = useRef(new Animated.Value(index * ITEM_W)).current;
-
+function EllaAvatar() {
   return (
-    <View style={styles.flex}>
-      <View style={styles.stepPad}>
-        <ThemedText type="subtitle">Meet your seatmate</ThemedText>
-        <ThemedText type="small" themeColor="textSecondary">
-          Swipe to explore. Pick the one that fits you — you can change them later.
-        </ThemedText>
-      </View>
-
-      <View style={styles.carouselArea}>
-        <AnimatedFlatList
-          data={COMPANIONS}
-          keyExtractor={(c) => c.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={ITEM_W}
-          snapToAlignment="start"
-          decelerationRate="fast"
-          contentContainerStyle={{ paddingHorizontal: SIDE }}
-          getItemLayout={(_, i) => ({ length: ITEM_W, offset: ITEM_W * i, index: i })}
-          initialScrollIndex={index}
-          scrollEventThrottle={16}
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: true })}
-          onMomentumScrollEnd={(e) => {
-            const i = Math.round(e.nativeEvent.contentOffset.x / ITEM_W);
-            if (i !== index) onIndexChange(i);
-          }}
-          renderItem={({ item, index: i }) => (
-            <CompanionCard companion={item} itemWidth={ITEM_W} pos={i} scrollX={scrollX} theme={theme} />
-          )}
-        />
-      </View>
-
-      <View style={styles.carouselDots}>
-        {COMPANIONS.map((c, i) => (
-          <View
-            key={c.id}
-            style={[
-              styles.dot,
-              {
-                backgroundColor: i === index ? COMPANIONS[index].color : theme.backgroundSelected,
-                width: i === index ? 22 : 8,
-              },
-            ]}
-          />
-        ))}
-      </View>
+    <View style={styles.ellaAvatarWrap}>
+      <View style={[styles.ellaGlow, { backgroundColor: ELLA.color + Alpha.soft }]} />
+      <Image source={ELLA.fullBody} style={styles.ellaFull} resizeMode="contain" />
     </View>
   );
 }
 
-function CompanionCard({
-  companion,
-  itemWidth,
-  pos,
-  scrollX,
+// A question posed by Ella: small avatar + a speech bubble. Used to make each
+// onboarding step feel like a conversation rather than a form.
+function EllaAsk({
+  question,
+  hint,
   theme,
 }: {
-  companion: Companion;
-  itemWidth: number;
-  pos: number;
-  scrollX: Animated.Value;
+  question: string;
+  hint?: string;
   theme: ReturnType<typeof useTheme>;
 }) {
-  const inputRange = [(pos - 1) * itemWidth, pos * itemWidth, (pos + 1) * itemWidth];
-  const scale = scrollX.interpolate({ inputRange, outputRange: [0.9, 1, 0.9], extrapolate: 'clamp' });
-  const opacity = scrollX.interpolate({ inputRange, outputRange: [0.55, 1, 0.55], extrapolate: 'clamp' });
-
   return (
-    <Animated.View style={{ width: itemWidth, transform: [{ scale }], opacity }}>
-      <View style={[styles.cardInner, { backgroundColor: theme.backgroundElement }, softShadow]}>
-        <View style={[styles.cardAvatar, { backgroundColor: companion.color + Alpha.soft }]}>
-          <ThemedText style={styles.cardEmoji}>{companion.emoji}</ThemedText>
-        </View>
-        <ThemedText type="subtitle" style={{ color: companion.color }}>
-          {companion.name}
+    <View style={styles.askRow}>
+      <Image source={ELLA.portrait} style={[styles.askAvatar, { backgroundColor: ELLA.color + Alpha.soft }]} />
+      <View style={[styles.askBubble, { backgroundColor: theme.backgroundElement }, softShadow]}>
+        <ThemedText type="smallBold" style={{ color: ELLA.color }}>
+          {ELLA.name}
         </ThemedText>
-        <ThemedText type="smallBold" style={styles.centerText}>
-          {companion.tagline}
-        </ThemedText>
-        <ThemedText type="small" themeColor="textSecondary" style={styles.centerText}>
-          {companion.blurb}
-        </ThemedText>
-        <View style={[styles.sampleLine, { borderColor: companion.color }]}>
-          <ThemedText type="small" style={{ color: companion.color }}>
-            “{getLine(companion.id, 'home_greeting', { name: 'you' })}”
+        <ThemedText type="subtitle">{question}</ThemedText>
+        {hint ? (
+          <ThemedText type="small" themeColor="textSecondary">
+            {hint}
           </ThemedText>
-        </View>
+        ) : null}
       </View>
-    </Animated.View>
+    </View>
   );
 }
 
@@ -506,10 +451,19 @@ const styles = StyleSheet.create({
   stepPad: { paddingHorizontal: Spacing.four, gap: Spacing.two, paddingTop: Spacing.four },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: Spacing.three },
   centerText: { textAlign: 'center' },
-  gapBottom: { marginBottom: Spacing.three },
 
-  welcomeBadge: { width: 120, height: 120, borderRadius: 60, alignItems: 'center', justifyContent: 'center' },
   backBtn: { flexDirection: 'row', alignItems: 'center', gap: 2 },
+
+  // Ella intro / ready
+  ellaAvatarWrap: { alignItems: 'center', justifyContent: 'center' },
+  ellaGlow: { position: 'absolute', bottom: 6, width: 180, height: 180, borderRadius: 90, opacity: 0.55 },
+  ellaFull: { width: 190, height: 248 },
+  introBubble: { alignSelf: 'stretch', borderRadius: Spacing.four, padding: Spacing.four },
+
+  // Ella asking a question (conversational step header)
+  askRow: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.three, marginBottom: Spacing.three },
+  askAvatar: { width: 52, height: 52, borderRadius: 26 },
+  askBubble: { flex: 1, borderRadius: Spacing.four, padding: Spacing.three, gap: 2 },
 
   input: { borderRadius: Spacing.three, paddingHorizontal: Spacing.three, paddingVertical: Spacing.three, fontSize: 18 },
   row: { flexDirection: 'row', gap: Spacing.two },
@@ -525,20 +479,6 @@ const styles = StyleSheet.create({
     borderRadius: Spacing.four,
     borderWidth: 2,
   },
-
-  // Carousel
-  carouselArea: { flex: 1, justifyContent: 'center' },
-  cardInner: {
-    marginHorizontal: Spacing.two,
-    borderRadius: Spacing.four,
-    padding: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-  },
-  cardAvatar: { width: 120, height: 120, borderRadius: 60, alignItems: 'center', justifyContent: 'center' },
-  cardEmoji: { fontSize: 64 },
-  sampleLine: { borderLeftWidth: 3, paddingLeft: Spacing.three, marginTop: Spacing.two },
-  carouselDots: { flexDirection: 'row', gap: Spacing.one, alignItems: 'center', justifyContent: 'center', paddingVertical: Spacing.three },
 
   footer: { paddingHorizontal: Spacing.four, paddingTop: Spacing.two, paddingBottom: Spacing.three },
   cta: { borderRadius: Spacing.three, paddingVertical: Spacing.three, alignItems: 'center' },

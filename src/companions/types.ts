@@ -1,15 +1,26 @@
 /** Types for the companion system. */
 
+import type { ImageSourcePropType } from 'react-native';
+
 export type Gender = 'male' | 'female';
 
-export type CompanionId = 'juan' | 'marco' | 'renz' | 'stacy' | 'bea' | 'ella';
+/**
+ * For the first release we ship a single companion, Ella. The id union and the
+ * registry below stay list-shaped so more companions can be added later without
+ * reworking the call sites.
+ */
+export type CompanionId = 'ella';
 
 export type Companion = {
   id: CompanionId;
   name: string;
   gender: Gender;
-  /** Emoji stand-in for real character art (swapped in later). */
+  /** Emoji stand-in, kept as a last-resort fallback if art fails to load. */
   emoji: string;
+  /** Head-and-shoulders crop for circular avatars. */
+  portrait: ImageSourcePropType;
+  /** Full-body character art for hero displays (transparent background). */
+  fullBody: ImageSourcePropType;
   /** Accent color used on the companion's cards/buttons. */
   color: string;
   /** One-line personality hook shown on the picker. */
@@ -24,6 +35,8 @@ export type Companion = {
  * the active companion + trigger.
  */
 export type TriggerKey =
+  | 'onboarding_intro' // Ella introducing herself at the start of onboarding
+  | 'onboarding_ready' // Ella's send-off at the end of onboarding
   | 'companion_selected' // right after you pick them in onboarding
   | 'home_greeting' // generic line on the home screen
   | 'home_morning' // home screen, before noon

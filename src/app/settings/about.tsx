@@ -1,10 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { COMPANIONS } from '@/companions/companions';
+import { ELLA } from '@/companions/companions';
 import { Brand, Spacing, Alpha } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -43,17 +43,18 @@ export default function AboutSettings() {
 
         <View style={[styles.card, { backgroundColor: theme.backgroundElement }]}>
           <ThemedText type="smallBold" style={{ marginBottom: Spacing.two }}>
-            Your companions
+            Your seatmate
           </ThemedText>
-          <View style={styles.companions}>
-            {COMPANIONS.map((c) => (
-              <View key={c.id} style={styles.companion}>
-                <View style={[styles.cAvatar, { backgroundColor: c.color + Alpha.soft }]}>
-                  <ThemedText style={styles.cEmoji}>{c.emoji}</ThemedText>
-                </View>
-                <ThemedText type="small">{c.name}</ThemedText>
-              </View>
-            ))}
+          <View style={styles.seatmate}>
+            <Image source={ELLA.portrait} style={[styles.cAvatar, { backgroundColor: ELLA.color + Alpha.soft }]} />
+            <View style={styles.flex}>
+              <ThemedText type="default" style={{ color: ELLA.color, fontWeight: '700' }}>
+                {ELLA.name}
+              </ThemedText>
+              <ThemedText type="small" themeColor="textSecondary">
+                {ELLA.tagline}
+              </ThemedText>
+            </View>
           </View>
         </View>
 
@@ -71,9 +72,8 @@ const styles = StyleSheet.create({
   hero: { alignItems: 'center', gap: Spacing.one, marginVertical: Spacing.three },
   logo: { width: 88, height: 88, borderRadius: 24, alignItems: 'center', justifyContent: 'center', marginBottom: Spacing.two },
   card: { borderRadius: Spacing.four, padding: Spacing.four, gap: Spacing.two },
-  companions: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.three, justifyContent: 'space-between' },
-  companion: { alignItems: 'center', gap: Spacing.one, width: '22%' },
-  cAvatar: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
-  cEmoji: { fontSize: 24 },
+  seatmate: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three },
+  flex: { flex: 1 },
+  cAvatar: { width: 48, height: 48, borderRadius: 24 },
   footer: { textAlign: 'center', marginTop: Spacing.two },
 });

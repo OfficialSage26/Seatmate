@@ -1,6 +1,6 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
@@ -58,9 +58,10 @@ export default function HomeScreen() {
           {/* Companion — the emotional centerpiece */}
           <View style={styles.companionBlock}>
             <View style={[styles.glow, { backgroundColor: companion.color + Alpha.soft }]} />
-            <View style={[styles.avatar, { backgroundColor: companion.color + Alpha.soft }]}>
-              <ThemedText style={styles.emoji}>{companion.emoji}</ThemedText>
-            </View>
+            <Image
+              source={companion.portrait}
+              style={[styles.avatar, { backgroundColor: companion.color + Alpha.soft }]}
+            />
             <View style={[styles.bubble, { backgroundColor: theme.backgroundElement }, softShadow]}>
               <ThemedText type="smallBold" style={{ color: companion.color }}>
                 {companion.name}
@@ -122,10 +123,7 @@ const styles = StyleSheet.create({
     width: 104,
     height: 104,
     borderRadius: 52,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  emoji: { fontSize: 56 },
   bubble: {
     alignSelf: 'stretch',
     borderRadius: Spacing.four,
