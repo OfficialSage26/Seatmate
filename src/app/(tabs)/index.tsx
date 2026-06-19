@@ -10,6 +10,7 @@ import { getLine } from '@/companions/dialogue';
 import type { TriggerKey } from '@/companions/types';
 import { Alpha, FloatingTabBarSpace, Spacing, softShadow } from '@/constants/theme';
 import { countSubjects } from '@/db/repositories/subjects';
+import { countNotes } from '@/db/repositories/notes';
 import { countTakenQuizzes, listUpcomingQuizzes } from '@/db/repositories/quizzes';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfileStore } from '@/store/profile';
@@ -24,19 +25,23 @@ function greetingTrigger(): TriggerKey {
 export default function HomeScreen() {
   const theme = useTheme();
   const { height } = useWindowDimensions();
-  const figureH = Math.min(Math.round(height * 0.42), 380);
+  // Waist-up Ella bust: the `ask` crop is ~1.2 wide-to-tall.
+  const figureH = Math.min(Math.round(height * 0.3), 280);
+  const figureW = Math.round(figureH * 1.201);
   const profile = useProfileStore((s) => s.profile)!;
   const companion = getCompanion(profile.companionId);
 
   const [upcoming, setUpcoming] = useState(0);
   const [subjects, setSubjects] = useState(0);
   const [taken, setTaken] = useState(0);
+  const [notes, setNotes] = useState(0);
 
   useFocusEffect(
     useCallback(() => {
       setUpcoming(listUpcomingQuizzes().length);
       setSubjects(countSubjects());
       setTaken(countTakenQuizzes());
+      setNotes(countNotes());
     }, []),
   );
 
@@ -59,10 +64,10 @@ export default function HomeScreen() {
 
           {/* Companion — the emotional centerpiece */}
           <View style={styles.companionBlock}>
-            <View style={[styles.glow, { backgroundColor: companion.color + Alpha.soft, width: figureH, height: figureH, borderRadius: figureH / 2 }]} />
+            <View style={[styles.glow, { backgroundColor: companion.color + Alpha.soft, width: figureW, height: figureW, borderRadius: figureW / 2 }]} />
             <Image
-              source={companion.fullBody}
-              style={{ width: Math.round(figureH * 0.384), height: figureH }}
+              source={companion.ask}
+              style={{ width: figureW, height: figureH }}
               resizeMode="contain"
             />
             <View style={[styles.bubble, { backgroundColor: theme.backgroundElement }, softShadow]}>
@@ -80,7 +85,7 @@ export default function HomeScreen() {
           </View>
           <View style={styles.statsRow}>
             <StatCard label="Quizzes taken" value={taken} theme={theme} />
-            <View style={styles.flex} />
+            <StatCard label="Notes" value={notes} theme={theme} />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -126,7 +131,6 @@ const styles = StyleSheet.create({
     gap: Spacing.one,
   },
   statsRow: { flexDirection: 'row', gap: Spacing.three },
-  flex: { flex: 1 },
   statCard: {
     flex: 1,
     borderRadius: Spacing.four,

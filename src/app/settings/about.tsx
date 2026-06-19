@@ -27,7 +27,7 @@ export default function AboutSettings() {
 
         <View style={[styles.card, { backgroundColor: theme.backgroundElement }]}>
           <ThemedText type="default">
-            Seatmate is your offline study buddy. Track your quizzes, subjects, and grades — with a
+            Seatmate is your offline study buddy. Track your quizzes, subjects, and grades, with a
             virtual seatmate who keeps you company and cheers you on along the way.
           </ThemedText>
         </View>
@@ -46,7 +46,9 @@ export default function AboutSettings() {
             Your seatmate
           </ThemedText>
           <View style={styles.seatmate}>
-            <Image source={ELLA.waistUp} style={styles.cAvatar} resizeMode="contain" />
+            <View style={[styles.avatarRing, { borderColor: ELLA.color }]}>
+              <Image source={ELLA.avatar} style={styles.cAvatar} resizeMode="cover" />
+            </View>
             <View style={styles.flex}>
               <ThemedText type="default" style={{ color: ELLA.color, fontWeight: '700' }}>
                 {ELLA.name}
@@ -74,6 +76,7 @@ const styles = StyleSheet.create({
   card: { borderRadius: Spacing.four, padding: Spacing.four, gap: Spacing.two },
   seatmate: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three },
   flex: { flex: 1 },
-  cAvatar: { width: 56, height: 72 },
+  avatarRing: { width: 56, height: 56, borderRadius: 28, borderWidth: 2, padding: 2 },
+  cAvatar: { width: '100%', height: '100%', borderRadius: 24 },
   footer: { textAlign: 'center', marginTop: Spacing.two },
 });

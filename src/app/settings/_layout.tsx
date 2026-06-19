@@ -12,9 +12,9 @@ export default function SettingsLayout() {
         headerShadowVisible: false,
         contentStyle: { backgroundColor: theme.background },
       }}>
-      <Stack.Screen name="index" options={{ title: 'Settings' }} />
       <Stack.Screen name="appearance" options={{ title: 'Appearance' }} />
       <Stack.Screen name="about" options={{ title: 'About' }} />
+      <Stack.Screen name="credits" options={{ title: 'Credits' }} />
     </Stack>
   );
 }

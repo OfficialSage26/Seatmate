@@ -7,6 +7,10 @@ export function listNotes(): Note[] {
   return db.getAllSync<Note>('SELECT * FROM notes ORDER BY updatedAt DESC');
 }
 
+export function countNotes(): number {
+  return db.getFirstSync<{ n: number }>('SELECT COUNT(*) AS n FROM notes')?.n ?? 0;
+}
+
 export function addNote(title: string, body: string): void {
   const now = new Date().toISOString();
   db.runSync(

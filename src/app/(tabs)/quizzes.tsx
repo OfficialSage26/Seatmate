@@ -270,7 +270,7 @@ export default function QuizzesScreen() {
               <Ionicons name="flash" size={26} color={Brand.primary} /> Surprise quiz
             </ThemedText>
             <ThemedText type="small" themeColor="textSecondary" style={{ marginBottom: Spacing.two }}>
-              Got ambushed? Log it for today — the total stays secret until you reveal your score.
+              Got ambushed? Log it for today. The total stays secret until you reveal your score.
             </ThemedText>
             <TextInput
               style={[styles.input, { backgroundColor: theme.backgroundElement, color: theme.text }]}

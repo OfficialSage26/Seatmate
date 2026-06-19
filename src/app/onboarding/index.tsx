@@ -139,12 +139,12 @@ export default function Onboarding() {
 
   const buttonLabel =
     step === 'welcome'
-      ? 'Nice to meet you'
+      ? 'Nice to meet you!'
       : step === 'ready'
-        ? "Let's begin"
+        ? 'Tara, let\'s go!'
         : step === 'gender' && gender === null
-          ? 'Skip'
-          : 'Continue';
+          ? 'Skip muna'
+          : 'Next';
 
   return (
     <ThemedView style={styles.container}>
@@ -251,7 +251,7 @@ function Step(props: StepProps) {
       <View style={[styles.stepPad, styles.center]}>
         <EllaHero />
         <ThemedText type="title" style={styles.centerText}>
-          Hi, I&apos;m Ella
+          Hi, ako si Ella
         </ThemedText>
         <View style={[styles.introBubble, { backgroundColor: theme.backgroundElement }, softShadow]}>
           <ThemedText type="default" style={styles.centerText}>
@@ -259,7 +259,7 @@ function Step(props: StepProps) {
           </ThemedText>
         </View>
         <ThemedText type="small" themeColor="textSecondary" style={styles.centerText}>
-          Works fully offline. No account needed.
+          Works offline, walang internet needed. No account, no hassle.
         </ThemedText>
       </View>
     );
@@ -270,7 +270,7 @@ function Step(props: StepProps) {
       <View style={[styles.stepPad, styles.center]}>
         <EllaHero source={ELLA.cheerful} ratio={CHEER_RATIO} />
         <ThemedText type="title" style={styles.centerText}>
-          All set{props.name.trim() ? `, ${props.name.trim()}` : ''}
+          All set na{props.name.trim() ? `, ${props.name.trim()}` : ''}
         </ThemedText>
         <View style={[styles.introBubble, { backgroundColor: theme.backgroundElement }, softShadow]}>
           <ThemedText type="default" style={styles.centerText}>
@@ -286,8 +286,8 @@ function Step(props: StepProps) {
       <View style={styles.stepPad}>
         <EllaAsk
           theme={theme}
-          question="First — what should I call you?"
-          hint="I'll use this whenever I greet you."
+          question="Una, ano'ng itatawag ko sa'yo?"
+          hint="Ito'ng gagamitin ko every time na babatiin kita."
         />
         <TextInput
           style={[styles.input, { backgroundColor: theme.backgroundElement, color: theme.text }]}
@@ -308,8 +308,8 @@ function Step(props: StepProps) {
       <View style={styles.stepPad}>
         <EllaAsk
           theme={theme}
-          question={`When's your birthday${props.name.trim() ? `, ${props.name.trim()}` : ''}?`}
-          hint="I'll work out your age from this — no need to type it."
+          question={`Kailan birthday mo${props.name.trim() ? `, ${props.name.trim()}` : ''}?`}
+          hint="Dito ko na kukunin ang age mo, di mo na kailangang i-type."
         />
         <View style={styles.row}>
           <View style={styles.flex2}>
@@ -344,8 +344,8 @@ function Step(props: StepProps) {
       <View style={styles.stepPad}>
         <EllaAsk
           theme={theme}
-          question={`How do you identify${props.name.trim() ? `, ${props.name.trim()}` : ''}?`}
-          hint="Totally optional — pick what feels right, or skip it."
+          question={`Paano mo gustong i-describe ang sarili mo${props.name.trim() ? `, ${props.name.trim()}` : ''}?`}
+          hint="Optional lang 'to. Pick what feels right, or skip it."
         />
         <View style={styles.genderGrid}>
           {options.map((o) => {
@@ -375,8 +375,8 @@ function Step(props: StepProps) {
       <View style={styles.stepPad}>
         <EllaAsk
           theme={theme}
-          question="And what year are you in right now?"
-          hint="So I can keep things relevant to you."
+          question="Tapos, anong year ka na ngayon?"
+          hint="Para relevant sa'yo lahat ng makikita mo."
         />
         <Dropdown placeholder="Select grade / year" value={props.gradeLevel} sections={GRADE_SECTIONS} onChange={props.setGradeLevel} />
       </View>
@@ -393,7 +393,8 @@ function Step(props: StepProps) {
 
 const WAIST_RATIO = 0.773; // width / height of the waist-up art
 const CHEER_RATIO = 0.701; // width / height of the cheering pose
-// The question standee uses the waist-up art; its 108×140 box matches its ~0.773 ratio.
+// The question standee uses a waist-up crop of the dashboard pose; its 210×175
+// box matches that crop's ~1.2 ratio.
 
 function EllaHero({
   source = ELLA.waistUp,
@@ -421,12 +422,14 @@ function EllaAsk({
 }) {
   return (
     <View style={styles.askRow}>
-      <Image source={ELLA.waistUp} style={styles.askFigure} resizeMode="contain" />
+      <Image source={ELLA.ask} style={styles.askFigure} resizeMode="contain" />
       <View style={[styles.askBubble, { backgroundColor: theme.backgroundElement }, softShadow]}>
         <ThemedText type="smallBold" style={{ color: ELLA.color }}>
           {ELLA.name}
         </ThemedText>
-        <ThemedText type="subtitle">{question}</ThemedText>
+        <ThemedText type="default" style={styles.askQuestion}>
+          {question}
+        </ThemedText>
         {hint ? (
           <ThemedText type="small" themeColor="textSecondary">
             {hint}
@@ -463,9 +466,12 @@ const styles = StyleSheet.create({
   introBubble: { alignSelf: 'stretch', borderRadius: Spacing.four, padding: Spacing.four },
 
   // Ella asking a question (conversational step header)
-  askRow: { flexDirection: 'row', alignItems: 'flex-end', gap: Spacing.two, marginBottom: Spacing.three },
-  askFigure: { width: 108, height: 140 },
-  askBubble: { flex: 1, borderRadius: Spacing.four, padding: Spacing.three, gap: 2, marginBottom: Spacing.two },
+  askRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 0, marginBottom: Spacing.three },
+  // zIndex/elevation keep Ella in front so the bubble tucks behind her (the
+  // bubble's softShadow uses elevation 3, so she needs a higher value on Android).
+  askFigure: { width: 210, height: 175, zIndex: 2, elevation: 4 },
+  askBubble: { flex: 1, borderRadius: Spacing.four, padding: Spacing.three, gap: 2, marginBottom: Spacing.two, marginLeft: -16 },
+  askQuestion: { fontSize: 20, lineHeight: 27, fontWeight: '700' },
 
   input: { borderRadius: Spacing.three, paddingHorizontal: Spacing.three, paddingVertical: Spacing.three, fontSize: 18 },
   row: { flexDirection: 'row', gap: Spacing.two },

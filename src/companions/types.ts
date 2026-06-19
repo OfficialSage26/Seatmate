@@ -25,6 +25,10 @@ export type Companion = {
   fullBody: ImageSourcePropType;
   /** Full-body cheering pose — used for the "all set" send-off on onboarding. */
   cheerful: ImageSourcePropType;
+  /** Waist-up crop of the dashboard pose — used beside each onboarding question. */
+  ask: ImageSourcePropType;
+  /** Square head-and-shoulders crop — used for circular avatars (e.g. Settings). */
+  avatar: ImageSourcePropType;
   /** Accent color used on the companion's cards/buttons. */
   color: string;
   /** One-line personality hook shown on the picker. */

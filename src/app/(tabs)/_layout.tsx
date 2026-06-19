@@ -36,9 +36,8 @@ export default function TabsLayout() {
       <Tabs.Screen name="index" options={{ title: 'Home' }} />
       <Tabs.Screen name="notes" options={{ title: 'Notes' }} />
       <Tabs.Screen name="subjects" options={{ title: 'Subjects' }} />
-      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
-      {/* Not in the navbar — reached via the center "+" button. */}
       <Tabs.Screen name="quizzes" options={{ title: 'Quizzes' }} />
+      <Tabs.Screen name="profile" options={{ title: 'Settings' }} />
     </Tabs>
   );
 }
