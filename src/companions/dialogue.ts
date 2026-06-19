@@ -16,7 +16,7 @@ const BANKS: Record<CompanionId, DialogueBank> = {
   // ── Ella: calm, gentle, encouraging ──────────────────────────────────────
   ella: {
     onboarding_intro: [
-      'Hi, I\'m Ella — your seatmate. I\'ll sit right beside you through every quiz and study day.',
+      'Hi, I\'m Ella! your seatmate. I\'ll sit right beside you through every quiz and study day.',
     ],
     onboarding_ready: [
       'That\'s everything I need, {name}. Whenever you\'re ready, let\'s begin — together, at your pace.',

@@ -10,6 +10,7 @@ import {
   Pressable,
   StyleSheet,
   TextInput,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -248,7 +249,7 @@ function Step(props: StepProps) {
   if (step === 'welcome') {
     return (
       <View style={[styles.stepPad, styles.center]}>
-        <EllaAvatar />
+        <EllaHero />
         <ThemedText type="title" style={styles.centerText}>
           Hi, I&apos;m Ella
         </ThemedText>
@@ -257,10 +258,6 @@ function Step(props: StepProps) {
             {getLine(ELLA.id, 'onboarding_intro')}
           </ThemedText>
         </View>
-        <ThemedText type="default" themeColor="textSecondary" style={styles.centerText}>
-          Seatmate helps you keep track of your quizzes, subjects, and grades — and I&apos;ll be
-          right here to keep you company along the way.
-        </ThemedText>
         <ThemedText type="small" themeColor="textSecondary" style={styles.centerText}>
           Works fully offline. No account needed.
         </ThemedText>
@@ -271,7 +268,7 @@ function Step(props: StepProps) {
   if (step === 'ready') {
     return (
       <View style={[styles.stepPad, styles.center]}>
-        <EllaAvatar />
+        <EllaHero source={ELLA.cheerful} ratio={CHEER_RATIO} />
         <ThemedText type="title" style={styles.centerText}>
           All set{props.name.trim() ? `, ${props.name.trim()}` : ''}
         </ThemedText>
@@ -391,20 +388,28 @@ function Step(props: StepProps) {
 }
 
 // ───────────────────────────────────────────────────────────────────────────
-// Ella's avatar — a soft glow behind the (placeholder) character art.
+// Ella's hero — a big waist-up figure (~half the screen) on the intro/outro.
 // ───────────────────────────────────────────────────────────────────────────
 
-function EllaAvatar() {
-  return (
-    <View style={styles.ellaAvatarWrap}>
-      <View style={[styles.ellaGlow, { backgroundColor: ELLA.color + Alpha.soft }]} />
-      <Image source={ELLA.fullBody} style={styles.ellaFull} resizeMode="contain" />
-    </View>
-  );
+const WAIST_RATIO = 0.773; // width / height of the waist-up art
+const CHEER_RATIO = 0.701; // width / height of the cheering pose
+// The question standee uses the waist-up art; its 108×140 box matches its ~0.773 ratio.
+
+function EllaHero({
+  source = ELLA.waistUp,
+  ratio = WAIST_RATIO,
+}: {
+  source?: typeof ELLA.waistUp;
+  ratio?: number;
+}) {
+  const { height } = useWindowDimensions();
+  const h = Math.min(Math.round(height * 0.46), 460);
+  const w = Math.round(h * ratio);
+  return <Image source={source} style={{ width: w, height: h }} resizeMode="contain" />;
 }
 
-// A question posed by Ella: small avatar + a speech bubble. Used to make each
-// onboarding step feel like a conversation rather than a form.
+// A question posed by Ella: a small standee + a speech bubble, so each
+// onboarding step feels like a conversation rather than a form.
 function EllaAsk({
   question,
   hint,
@@ -416,7 +421,7 @@ function EllaAsk({
 }) {
   return (
     <View style={styles.askRow}>
-      <Image source={ELLA.portrait} style={[styles.askAvatar, { backgroundColor: ELLA.color + Alpha.soft }]} />
+      <Image source={ELLA.waistUp} style={styles.askFigure} resizeMode="contain" />
       <View style={[styles.askBubble, { backgroundColor: theme.backgroundElement }, softShadow]}>
         <ThemedText type="smallBold" style={{ color: ELLA.color }}>
           {ELLA.name}
@@ -455,15 +460,12 @@ const styles = StyleSheet.create({
   backBtn: { flexDirection: 'row', alignItems: 'center', gap: 2 },
 
   // Ella intro / ready
-  ellaAvatarWrap: { alignItems: 'center', justifyContent: 'center' },
-  ellaGlow: { position: 'absolute', bottom: 6, width: 180, height: 180, borderRadius: 90, opacity: 0.55 },
-  ellaFull: { width: 190, height: 248 },
   introBubble: { alignSelf: 'stretch', borderRadius: Spacing.four, padding: Spacing.four },
 
   // Ella asking a question (conversational step header)
-  askRow: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.three, marginBottom: Spacing.three },
-  askAvatar: { width: 52, height: 52, borderRadius: 26 },
-  askBubble: { flex: 1, borderRadius: Spacing.four, padding: Spacing.three, gap: 2 },
+  askRow: { flexDirection: 'row', alignItems: 'flex-end', gap: Spacing.two, marginBottom: Spacing.three },
+  askFigure: { width: 108, height: 140 },
+  askBubble: { flex: 1, borderRadius: Spacing.four, padding: Spacing.three, gap: 2, marginBottom: Spacing.two },
 
   input: { borderRadius: Spacing.three, paddingHorizontal: Spacing.three, paddingVertical: Spacing.three, fontSize: 18 },
   row: { flexDirection: 'row', gap: Spacing.two },

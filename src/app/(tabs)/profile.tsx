@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { getCompanion } from '@/companions/companions';
-import { Alpha, FloatingTabBarSpace, Spacing, softShadow } from '@/constants/theme';
+import { FloatingTabBarSpace, Spacing, softShadow } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfileStore } from '@/store/profile';
 
@@ -38,7 +38,7 @@ export default function ProfileScreen() {
 
           {/* Identity card */}
           <View style={[styles.card, { backgroundColor: theme.backgroundElement }, softShadow]}>
-            <Image source={current.portrait} style={[styles.avatar, { backgroundColor: current.color + Alpha.soft }]} />
+            <Image source={current.waistUp} style={styles.avatar} resizeMode="contain" />
             <View style={styles.flex}>
               <ThemedText type="default" style={{ fontWeight: '700' }}>
                 {profile.name}
@@ -63,7 +63,7 @@ export default function ProfileScreen() {
             Your seatmate
           </ThemedText>
           <View style={[styles.ellaCard, { backgroundColor: theme.backgroundElement }]}>
-            <Image source={current.portrait} style={[styles.miniAvatar, { backgroundColor: current.color + Alpha.soft }]} />
+            <Image source={current.waistUp} style={styles.miniAvatar} resizeMode="contain" />
             <View style={styles.flex}>
               <ThemedText type="small" style={{ color: current.color, fontWeight: '700' }}>
                 {current.name}
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   safe: { flex: 1, paddingHorizontal: Spacing.four, paddingTop: Spacing.three },
   content: { gap: Spacing.three, paddingBottom: FloatingTabBarSpace },
   card: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, borderRadius: Spacing.four, padding: Spacing.four },
-  avatar: { width: 68, height: 68, borderRadius: 34 },
+  avatar: { width: 76, height: 96 },
   flex: { flex: 1, gap: 2 },
   ellaCard: {
     flexDirection: 'row',
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     padding: Spacing.three,
     borderRadius: Spacing.four,
   },
-  miniAvatar: { width: 44, height: 44, borderRadius: 22 },
+  miniAvatar: { width: 52, height: 66 },
   settingsRow: {
     flexDirection: 'row',
     alignItems: 'center',

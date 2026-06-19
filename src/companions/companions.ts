@@ -15,8 +15,9 @@ export const ELLA: Companion = {
   name: 'Ella',
   gender: 'female',
   emoji: '🌿',
-  portrait: require('../../assets/images/Ella/ella-portrait.png'),
+  waistUp: require('../../assets/images/Ella/ella-onboarding.png'),
   fullBody: require('../../assets/images/Ella/ella-full.png'),
+  cheerful: require('../../assets/images/Ella/ella-cheerful.png'),
   color: '#27AE60',
   tagline: 'Calm, gentle, encouraging.',
   blurb:

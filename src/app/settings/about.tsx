@@ -46,7 +46,7 @@ export default function AboutSettings() {
             Your seatmate
           </ThemedText>
           <View style={styles.seatmate}>
-            <Image source={ELLA.portrait} style={[styles.cAvatar, { backgroundColor: ELLA.color + Alpha.soft }]} />
+            <Image source={ELLA.waistUp} style={styles.cAvatar} resizeMode="contain" />
             <View style={styles.flex}>
               <ThemedText type="default" style={{ color: ELLA.color, fontWeight: '700' }}>
                 {ELLA.name}
@@ -74,6 +74,6 @@ const styles = StyleSheet.create({
   card: { borderRadius: Spacing.four, padding: Spacing.four, gap: Spacing.two },
   seatmate: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three },
   flex: { flex: 1 },
-  cAvatar: { width: 48, height: 48, borderRadius: 24 },
+  cAvatar: { width: 56, height: 72 },
   footer: { textAlign: 'center', marginTop: Spacing.two },
 });

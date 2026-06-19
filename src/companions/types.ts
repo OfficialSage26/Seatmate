@@ -17,10 +17,14 @@ export type Companion = {
   gender: Gender;
   /** Emoji stand-in, kept as a last-resort fallback if art fails to load. */
   emoji: string;
-  /** Head-and-shoulders crop for circular avatars. */
-  portrait: ImageSourcePropType;
-  /** Full-body character art for hero displays (transparent background). */
+  /** Waist-up character art (welcoming pose) — used for the hero on onboarding
+   * and as the figure everywhere else. */
+  waistUp: ImageSourcePropType;
+  /** Full-body character art (transparent) — used large on the dashboard and
+   * as the figure on each onboarding question. */
   fullBody: ImageSourcePropType;
+  /** Full-body cheering pose — used for the "all set" send-off on onboarding. */
+  cheerful: ImageSourcePropType;
   /** Accent color used on the companion's cards/buttons. */
   color: string;
   /** One-line personality hook shown on the picker. */

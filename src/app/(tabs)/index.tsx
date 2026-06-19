@@ -1,6 +1,6 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
@@ -23,6 +23,8 @@ function greetingTrigger(): TriggerKey {
 
 export default function HomeScreen() {
   const theme = useTheme();
+  const { height } = useWindowDimensions();
+  const figureH = Math.min(Math.round(height * 0.42), 380);
   const profile = useProfileStore((s) => s.profile)!;
   const companion = getCompanion(profile.companionId);
 
@@ -57,10 +59,11 @@ export default function HomeScreen() {
 
           {/* Companion — the emotional centerpiece */}
           <View style={styles.companionBlock}>
-            <View style={[styles.glow, { backgroundColor: companion.color + Alpha.soft }]} />
+            <View style={[styles.glow, { backgroundColor: companion.color + Alpha.soft, width: figureH, height: figureH, borderRadius: figureH / 2 }]} />
             <Image
-              source={companion.portrait}
-              style={[styles.avatar, { backgroundColor: companion.color + Alpha.soft }]}
+              source={companion.fullBody}
+              style={{ width: Math.round(figureH * 0.384), height: figureH }}
+              resizeMode="contain"
             />
             <View style={[styles.bubble, { backgroundColor: theme.backgroundElement }, softShadow]}>
               <ThemedText type="smallBold" style={{ color: companion.color }}>
@@ -110,19 +113,11 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   safe: { flex: 1 },
   content: { padding: Spacing.four, gap: Spacing.four, paddingBottom: FloatingTabBarSpace },
-  companionBlock: { alignItems: 'center', gap: Spacing.three, marginTop: Spacing.two },
+  companionBlock: { alignItems: 'center', gap: Spacing.two, marginTop: Spacing.two },
   glow: {
     position: 'absolute',
-    top: -10,
-    width: 160,
-    height: 160,
-    borderRadius: 80,
-    opacity: 0.6,
-  },
-  avatar: {
-    width: 104,
-    height: 104,
-    borderRadius: 52,
+    bottom: 24,
+    opacity: 0.5,
   },
   bubble: {
     alignSelf: 'stretch',
