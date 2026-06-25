@@ -2,10 +2,6 @@
  * The companion roster. For now Seatmate ships with a single companion, Ella.
  * This stays an array (rather than a lone object) so additional companions can
  * be slotted in later without changing how screens consume it.
- *
- * `emoji` is a placeholder for Ella's real character art — see
- * `reference/ella-character-prompt.md` for the master art-style + character
- * brief used to generate that art consistently.
  */
 
 import type { Companion, CompanionId } from './types';
@@ -14,16 +10,15 @@ export const ELLA: Companion = {
   id: 'ella',
   name: 'Ella',
   gender: 'female',
-  emoji: '🌿',
   waistUp: require('../../assets/images/Ella/ella-full.png'),
   fullBody: require('../../assets/images/Ella/ella-full.png'),
-  cheerful: require('../../assets/images/Ella/ella-cheerful.png'),
+  cheerful: require('../../assets/images/Ella/ella-cheer.png'),
   ask: require('../../assets/images/Ella/ella-ask.png'),
   avatar: require('../../assets/images/Ella/ella-avatar.png'),
   color: '#27AE60',
   tagline: 'Calm, gentle, encouraging.',
   blurb:
-    'A steady, reassuring presence. Ella helps you breathe, refocus, and keep going at your own pace — one small step at a time.',
+    'A steady, reassuring presence. Ella helps you breathe, refocus, and keep going at your own pace, one small step at a time.',
 };
 
 export const COMPANIONS: Companion[] = [ELLA];

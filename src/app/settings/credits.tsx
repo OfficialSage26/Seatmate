@@ -54,7 +54,7 @@ export default function CreditsSettings() {
         </View>
 
         <ThemedText type="small" themeColor="textSecondary" style={styles.footer}>
-          Salamat for studying with Ella. 🌿
+          Salamat sa pag-aaral kasama si Ella.
         </ThemedText>
       </ScrollView>
     </ThemedView>

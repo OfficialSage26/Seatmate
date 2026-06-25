@@ -15,8 +15,6 @@ export type Companion = {
   id: CompanionId;
   name: string;
   gender: Gender;
-  /** Emoji stand-in, kept as a last-resort fallback if art fails to load. */
-  emoji: string;
   /** Waist-up character art (welcoming pose) — used for the hero on onboarding
    * and as the figure everywhere else. */
   waistUp: ImageSourcePropType;
