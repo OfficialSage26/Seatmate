@@ -2,6 +2,7 @@
 
 import { db } from '@/db/client';
 import type { Note } from '@/db/schema';
+import { logActivity } from './activity';
 
 export function listNotes(): Note[] {
   return db.getAllSync<Note>('SELECT * FROM notes ORDER BY updatedAt DESC');
@@ -20,6 +21,7 @@ export function addNote(title: string, body: string): void {
     now,
     now,
   );
+  logActivity();
 }
 
 export function updateNote(id: number, title: string, body: string): void {
@@ -30,6 +32,7 @@ export function updateNote(id: number, title: string, body: string): void {
     new Date().toISOString(),
     id,
   );
+  logActivity();
 }
 
 export function deleteNote(id: number): void {

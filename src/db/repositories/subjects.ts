@@ -2,6 +2,7 @@
 
 import { db } from '@/db/client';
 import type { Subject } from '@/db/schema';
+import { logActivity } from './activity';
 
 export function listSubjects(): Subject[] {
   return db.getAllSync<Subject>('SELECT * FROM subjects ORDER BY name COLLATE NOCASE ASC');
@@ -19,6 +20,7 @@ export function addSubject(name: string, color: string): void {
     color,
     new Date().toISOString(),
   );
+  logActivity();
 }
 
 export function deleteSubject(id: number): void {

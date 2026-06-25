@@ -1,9 +1,16 @@
-import { Tabs } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
 import { Easing } from 'react-native';
 
 import { FloatingTabBar } from '@/components/floating-tab-bar';
+import { useProfileStore } from '@/store/profile';
 
 export default function TabsLayout() {
+  const profile = useProfileStore((s) => s.profile);
+
+  // After "Erase all data" the profile becomes null while the tabs are still
+  // mounted. Redirect out before any child screen reads profile and crashes.
+  if (!profile) return <Redirect href="/onboarding" />;
+
   return (
     <Tabs
       screenOptions={{

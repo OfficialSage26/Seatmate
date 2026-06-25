@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: Spacing.three },
   addBtn: { paddingHorizontal: Spacing.three, paddingVertical: Spacing.two, borderRadius: 999 },
   form: { borderRadius: Spacing.four, padding: Spacing.three, gap: Spacing.three, marginBottom: Spacing.three },
-  input: { borderRadius: Spacing.three, paddingHorizontal: Spacing.three, paddingVertical: Spacing.three, fontSize: 16 },
+  input: { borderRadius: Spacing.three, paddingHorizontal: Spacing.three, paddingVertical: Spacing.three, fontSize: 16, fontFamily: 'Nunito_400Regular' },
   swatchRow: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two },
   swatch: { width: 36, height: 36, borderRadius: 18, borderWidth: 3 },
   saveBtn: { borderRadius: Spacing.three, paddingVertical: Spacing.three, alignItems: 'center' },

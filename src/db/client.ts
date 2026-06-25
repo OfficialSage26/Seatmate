@@ -49,5 +49,5 @@ function ensureColumn(table: string, column: string, type: string) {
  * structure; just clears the rows so onboarding starts fresh.
  */
 export function resetAllData() {
-  db.execSync('DELETE FROM profile; DELETE FROM subjects; DELETE FROM quizzes; DELETE FROM notes; DELETE FROM settings;');
+  db.execSync('DELETE FROM profile; DELETE FROM subjects; DELETE FROM quizzes; DELETE FROM notes; DELETE FROM settings; DELETE FROM activity;');
 }

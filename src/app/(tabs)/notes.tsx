@@ -15,8 +15,10 @@ import { useTheme } from '@/hooks/use-theme';
 // so a card keeps its color and column no matter how the list reorders.
 const NOTE_COLORS = ['#C4FFCA', '#C5CBFF', '#FBBECF', '#FDF3BF', '#96F4F4', '#FEC5FF'];
 const noteColor = (id: number) => NOTE_COLORS[id % NOTE_COLORS.length];
-const CARD_TITLE = '#646464';
-const CARD_BODY = '#818181';
+// Cards are always light pastels, so use near-black text for contrast.
+const CARD_TITLE = '#1F2937';
+const CARD_BODY = '#374151';
+const CARD_PLACEHOLDER = '#6B7280';
 
 export default function NotesScreen() {
   const theme = useTheme();
@@ -197,14 +199,14 @@ export default function NotesScreen() {
             <TextInput
               style={styles.editorTitle}
               placeholder="Title"
-              placeholderTextColor={CARD_BODY}
+              placeholderTextColor={CARD_PLACEHOLDER}
               value={title}
               onChangeText={setTitle}
             />
             <TextInput
               style={styles.editorBody}
               placeholder="Write your note…"
-              placeholderTextColor={CARD_BODY}
+              placeholderTextColor={CARD_PLACEHOLDER}
               value={body}
               onChangeText={setBody}
               multiline
@@ -224,13 +226,13 @@ const styles = StyleSheet.create({
   headerSide: { width: 24, alignItems: 'flex-end' },
   headerActions: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, width: 64, justifyContent: 'flex-end' },
   headerTitle: { textAlign: 'center', fontWeight: '600' },
-  search: { borderRadius: Spacing.three, paddingHorizontal: Spacing.three, paddingVertical: Spacing.two + 2, fontSize: 15, marginBottom: Spacing.three },
+  search: { borderRadius: Spacing.three, paddingHorizontal: Spacing.three, paddingVertical: Spacing.two + 2, fontSize: 15, marginBottom: Spacing.three, fontFamily: 'Nunito_400Regular' },
   list: { paddingBottom: FloatingTabBarSpace },
   masonry: { flexDirection: 'row', gap: Spacing.three },
   column: { flex: 1, gap: Spacing.three },
-  card: { borderRadius: 16, paddingHorizontal: Spacing.three, paddingVertical: Spacing.three + 4, gap: Spacing.two },
-  cardTitle: { color: CARD_TITLE, textAlign: 'center', fontWeight: '600' },
-  cardBody: { color: CARD_BODY, textAlign: 'center', lineHeight: 18 },
+  card: { borderRadius: 16, paddingHorizontal: Spacing.three, paddingVertical: Spacing.three + 4, gap: Spacing.one + 2 },
+  cardTitle: { color: CARD_TITLE, fontWeight: '700' },
+  cardBody: { color: CARD_BODY, fontSize: 14, lineHeight: 20 },
   empty: { alignItems: 'center', gap: Spacing.two, marginTop: Spacing.six },
   emptyBadge: { width: 88, height: 88, borderRadius: 44, alignItems: 'center', justifyContent: 'center', marginBottom: Spacing.two },
   center: { textAlign: 'center', paddingHorizontal: Spacing.five },
@@ -238,6 +240,6 @@ const styles = StyleSheet.create({
   editor: { flex: 1 },
   editorSafe: { flex: 1, paddingHorizontal: Spacing.four },
   editorHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: Spacing.three },
-  editorTitle: { fontSize: 30, fontWeight: '600', color: CARD_TITLE, textAlign: 'center', marginTop: Spacing.three },
-  editorBody: { flex: 1, fontSize: 20, lineHeight: 30, color: CARD_BODY, marginTop: Spacing.four, paddingBottom: Spacing.four },
+  editorTitle: { fontSize: 28, fontWeight: '700', color: CARD_TITLE, marginTop: Spacing.three, fontFamily: 'Nunito_700Bold' },
+  editorBody: { flex: 1, fontSize: 18, lineHeight: 28, color: CARD_BODY, marginTop: Spacing.four, paddingBottom: Spacing.four, fontFamily: 'Nunito_400Regular' },
 });

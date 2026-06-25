@@ -483,7 +483,7 @@ const styles = StyleSheet.create({
   maxInput: { width: 90 },
   toggleRow: { flexDirection: 'row', gap: Spacing.three, alignItems: 'center' },
   checkbox: { width: 24, height: 24, borderRadius: 6, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
-  input: { borderRadius: Spacing.three, paddingHorizontal: Spacing.three, paddingVertical: Spacing.three, fontSize: 16 },
+  input: { borderRadius: Spacing.three, paddingHorizontal: Spacing.three, paddingVertical: Spacing.three, fontSize: 16, fontFamily: 'Nunito_400Regular' },
   dateBtn: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
   saveBtn: { borderRadius: Spacing.three, paddingVertical: Spacing.three, alignItems: 'center' },
   logBtn: { borderRadius: Spacing.three, paddingHorizontal: Spacing.four, justifyContent: 'center', alignItems: 'center' },

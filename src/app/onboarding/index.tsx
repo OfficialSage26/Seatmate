@@ -268,7 +268,7 @@ function Step(props: StepProps) {
   if (step === 'ready') {
     return (
       <View style={[styles.stepPad, styles.center]}>
-        <EllaHero source={ELLA.cheerful} ratio={CHEER_RATIO} />
+        <EllaHero source={ELLA.cheerful} ratio={CHEER_RATIO} heightFactor={0.52} />
         <ThemedText type="title" style={styles.centerText}>
           All set na{props.name.trim() ? `, ${props.name.trim()}` : ''}
         </ThemedText>
@@ -392,20 +392,29 @@ function Step(props: StepProps) {
 // ───────────────────────────────────────────────────────────────────────────
 
 const WAIST_RATIO = 0.773; // width / height of the waist-up art
-const CHEER_RATIO = 0.701; // width / height of the cheering pose
+const CHEER_RATIO = 622 / 735; // ≈0.846, the waist-up cheering crop
 // The question standee uses a waist-up crop of the dashboard pose; its 210×175
 // box matches that crop's ~1.2 ratio.
 
 function EllaHero({
   source = ELLA.waistUp,
   ratio = WAIST_RATIO,
+  heightFactor = 0.46,
 }: {
   source?: typeof ELLA.waistUp;
   ratio?: number;
+  heightFactor?: number;
 }) {
-  const { height } = useWindowDimensions();
-  const h = Math.min(Math.round(height * 0.46), 460);
-  const w = Math.round(h * ratio);
+  const { width, height } = useWindowDimensions();
+  let h = Math.min(Math.round(height * heightFactor), 480);
+  let w = Math.round(h * ratio);
+  // Wide crops (the waist-up bust) would overflow if sized purely by height,
+  // so clamp to the available content width and recompute height from it.
+  const maxW = Math.round(width * 0.94);
+  if (w > maxW) {
+    w = maxW;
+    h = Math.round(w / ratio);
+  }
   return <Image source={source} style={{ width: w, height: h }} resizeMode="contain" />;
 }
 
@@ -473,7 +482,7 @@ const styles = StyleSheet.create({
   askBubble: { flex: 1, borderRadius: Spacing.four, padding: Spacing.three, gap: 2, marginBottom: Spacing.two, marginLeft: -16 },
   askQuestion: { fontSize: 20, lineHeight: 27, fontWeight: '700' },
 
-  input: { borderRadius: Spacing.three, paddingHorizontal: Spacing.three, paddingVertical: Spacing.three, fontSize: 18 },
+  input: { borderRadius: Spacing.three, paddingHorizontal: Spacing.three, paddingVertical: Spacing.three, fontSize: 18, fontFamily: 'Nunito_400Regular' },
   row: { flexDirection: 'row', gap: Spacing.two },
   ageChip: { marginTop: Spacing.three, alignSelf: 'flex-start', paddingHorizontal: Spacing.three, paddingVertical: Spacing.two, borderRadius: 999 },
 

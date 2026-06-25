@@ -3,6 +3,7 @@
 import { todayISO } from '@/constants/academic';
 import { db } from '@/db/client';
 import type { Quiz } from '@/db/schema';
+import { logActivity } from './activity';
 
 /** All quizzes, soonest date first. */
 export function listQuizzes(): Quiz[] {
@@ -48,6 +49,7 @@ export function addQuiz(input: NewQuiz): void {
     input.isSurprise ? 1 : 0,
     new Date().toISOString(),
   );
+  logActivity();
 }
 
 /** A surprise/pop quiz: filed under today (local), total kept secret. */
@@ -65,6 +67,7 @@ export function setQuizScore(id: number, score: number, revealedMax?: number): v
   } else {
     db.runSync('UPDATE quizzes SET score = ? WHERE id = ?', score, id);
   }
+  logActivity();
 }
 
 export function deleteQuiz(id: number): void {

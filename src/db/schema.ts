@@ -61,6 +61,13 @@ export type Note = {
 export type SettingRow = { key: string; value: string };
 
 /**
+ * One row per calendar day the student did something in the app (added/edited a
+ * note, logged a quiz, recorded a score, added a subject). `count` is how many
+ * such actions happened that day. Powers the home-screen streak and weekly graph.
+ */
+export type ActivityDay = { day: string; count: number };
+
+/**
  * Table-creation statements. Run once on app start. `IF NOT EXISTS` makes this
  * safe to run every launch — existing data is left untouched.
  */
@@ -105,5 +112,10 @@ CREATE TABLE IF NOT EXISTS notes (
 CREATE TABLE IF NOT EXISTS settings (
   key   TEXT PRIMARY KEY,
   value TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS activity (
+  day   TEXT    PRIMARY KEY, -- 'YYYY-MM-DD' (local)
+  count INTEGER NOT NULL DEFAULT 0
 );
 `;
