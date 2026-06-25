@@ -8,9 +8,11 @@
     "scheme": "seatmate",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.seatmate.app"
     },
     "android": {
+      "package": "com.seatmate.app",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -40,6 +42,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "934d7655-f0a8-4ea6-b0d4-17a3d4065ce0"
+      }
+    },
+    "owner": "johnn2323"
   }
 }
