@@ -10,6 +10,7 @@ import { resetAllData } from '@/db/client';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfileStore } from '@/store/profile';
 import { useSettingsStore } from '@/store/settings';
+import { useTourStore } from '@/store/tour';
 
 const THEME_LABELS = { system: 'System', light: 'Light', dark: 'Dark' } as const;
 
@@ -17,6 +18,7 @@ export default function SettingsScreen() {
   const theme = useTheme();
   const router = useRouter();
   const themePref = useSettingsStore((s) => s.themePref);
+  const startTour = useTourStore((s) => s.start);
 
   function confirmReset() {
     // Step 1: warn.
@@ -62,6 +64,13 @@ export default function SettingsScreen() {
               value={THEME_LABELS[themePref]}
               theme={theme}
               onPress={() => router.push('/settings/appearance')}
+            />
+            <Divider theme={theme} />
+            <Row
+              icon="school-outline"
+              label="How to use Seatmate"
+              theme={theme}
+              onPress={startTour}
             />
             <Divider theme={theme} />
             <Row

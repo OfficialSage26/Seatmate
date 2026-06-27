@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CalendarModal } from '@/components/calendar-modal';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { useTourTarget } from '@/components/tour/use-tour-target';
 import { getLine } from '@/companions/dialogue';
 import type { TriggerKey } from '@/companions/types';
 import { Alpha, Brand, FloatingTabBarSpace, Spacing, softShadow } from '@/constants/theme';
@@ -37,6 +38,7 @@ function formatDate(iso: string): string {
 export default function QuizzesScreen() {
   const theme = useTheme();
   const profile = useProfileStore((s) => s.profile)!;
+  const addBtnRef = useTourTarget('quizzes-add');
 
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -139,6 +141,8 @@ export default function QuizzesScreen() {
               </ThemedText>
             </Pressable>
             <Pressable
+              ref={addBtnRef}
+              collapsable={false}
               onPress={() => setShowForm((v) => !v)}
               style={[styles.addBtn, { backgroundColor: Brand.primary }, softShadow]}>
               <ThemedText type="smallBold" style={{ color: Brand.onPrimary }}>

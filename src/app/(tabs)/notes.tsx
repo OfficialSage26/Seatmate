@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { useTourTarget } from '@/components/tour/use-tour-target';
 import { FloatingTabBarSpace, Spacing } from '@/constants/theme';
 import { addNote, deleteNote, listNotes, updateNote } from '@/db/repositories/notes';
 import type { Note } from '@/db/schema';
@@ -22,6 +23,7 @@ const CARD_PLACEHOLDER = '#6B7280';
 
 export default function NotesScreen() {
   const theme = useTheme();
+  const addBtnRef = useTourTarget('notes-add');
 
   const [notes, setNotes] = useState<Note[]>([]);
   const refresh = useCallback(() => setNotes(listNotes()), []);
@@ -135,7 +137,13 @@ export default function NotesScreen() {
               hitSlop={8}>
               <Ionicons name={searchOpen ? 'close' : 'search'} size={22} color={theme.text} />
             </Pressable>
-            <Pressable accessibilityRole="button" accessibilityLabel="Add a note" onPress={openNew} hitSlop={8}>
+            <Pressable
+              ref={addBtnRef}
+              collapsable={false}
+              accessibilityRole="button"
+              accessibilityLabel="Add a note"
+              onPress={openNew}
+              hitSlop={8}>
               <Ionicons name="add" size={26} color={theme.text} />
             </Pressable>
           </View>

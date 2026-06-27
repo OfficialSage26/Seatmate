@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { useTourTarget } from '@/components/tour/use-tour-target';
 import { Alpha, Brand, FloatingTabBarSpace, Spacing, softShadow } from '@/constants/theme';
 import { SUBJECT_COLORS } from '@/constants/academic';
 import { addSubject, deleteSubject, listSubjects } from '@/db/repositories/subjects';
@@ -14,6 +15,7 @@ import { useTheme } from '@/hooks/use-theme';
 
 export default function SubjectsScreen() {
   const theme = useTheme();
+  const addBtnRef = useTourTarget('subjects-add');
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState('');
@@ -51,6 +53,8 @@ export default function SubjectsScreen() {
             </ThemedText>
           </View>
           <Pressable
+            ref={addBtnRef}
+            collapsable={false}
             onPress={() => setAdding((a) => !a)}
             style={[styles.addBtn, { backgroundColor: Brand.primary }, softShadow]}>
             <ThemedText type="smallBold" style={{ color: Brand.onPrimary }}>
