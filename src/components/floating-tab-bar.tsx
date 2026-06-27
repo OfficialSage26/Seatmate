@@ -5,16 +5,25 @@ import Animated, { useAnimatedStyle, withSpring, withTiming } from 'react-native
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
+import { useTourTarget } from '@/components/tour/use-tour-target';
 import { Brand, Spacing } from '@/constants/theme';
 import { useResolvedScheme } from '@/hooks/use-resolved-scheme';
 
+type TabMeta = {
+  on: keyof typeof Ionicons.glyphMap;
+  off: keyof typeof Ionicons.glyphMap;
+  label: string;
+  /** Tour registry id, so the walkthrough can spotlight this tab. */
+  tour: string;
+};
+
 /** Outline/filled icon + label for each tab route, keyed by route name. */
-const TABS: Record<string, { on: keyof typeof Ionicons.glyphMap; off: keyof typeof Ionicons.glyphMap; label: string }> = {
-  index: { on: 'home', off: 'home-outline', label: 'Home' },
-  notes: { on: 'document-text', off: 'document-text-outline', label: 'Notes' },
-  subjects: { on: 'book', off: 'book-outline', label: 'Subjects' },
-  quizzes: { on: 'clipboard', off: 'clipboard-outline', label: 'Quizzes' },
-  profile: { on: 'settings', off: 'settings-outline', label: 'Settings' },
+const TABS: Record<string, TabMeta> = {
+  index: { on: 'home', off: 'home-outline', label: 'Home', tour: 'tab-home' },
+  notes: { on: 'document-text', off: 'document-text-outline', label: 'Notes', tour: 'tab-notes' },
+  subjects: { on: 'book', off: 'book-outline', label: 'Subjects', tour: 'tab-subjects' },
+  quizzes: { on: 'clipboard', off: 'clipboard-outline', label: 'Quizzes', tour: 'tab-quizzes' },
+  profile: { on: 'settings', off: 'settings-outline', label: 'Settings', tour: 'tab-settings' },
 };
 
 // Bar metrics — a single rounded pill that floats above the bottom inset.
@@ -78,10 +87,11 @@ function TabButton({
   onPress,
 }: {
   focused: boolean;
-  tab: { on: keyof typeof Ionicons.glyphMap; off: keyof typeof Ionicons.glyphMap; label: string };
+  tab: TabMeta;
   inactive: string;
   onPress: () => void;
 }) {
+  const tourRef = useTourTarget(tab.tour);
   const iconStyle = useAnimatedStyle(
     () => ({
       transform: [{ translateY: withSpring(focused ? -2 : 0, { damping: 14, stiffness: 260 }) }],
@@ -99,6 +109,8 @@ function TabButton({
 
   return (
     <Pressable
+      ref={tourRef}
+      collapsable={false}
       accessibilityRole="button"
       accessibilityLabel={tab.label}
       accessibilityState={focused ? { selected: true } : {}}

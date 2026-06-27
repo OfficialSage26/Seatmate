@@ -11,6 +11,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
 
+import { TutorialOverlay } from '@/components/tour/tutorial-overlay';
 import { NunitoFonts } from '@/constants/fonts';
 import { Colors } from '@/constants/theme';
 import { initDatabase } from '@/db/client';
@@ -62,9 +63,11 @@ export default function RootLayout() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="index" />
           <Stack.Screen name="onboarding" />
+          <Stack.Screen name="tutorial" />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="settings" />
         </Stack>
+        <TutorialOverlay />
       </ThemeProvider>
     </SafeAreaProvider>
   );

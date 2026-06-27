@@ -116,7 +116,8 @@ export default function Onboarding() {
       gradeLevel: gradeLevel!,
       companionId: ELLA.id,
     });
-    router.replace('/(tabs)');
+    // Offer the quick walkthrough before dropping into the app.
+    router.replace('/tutorial');
   }
 
   // ── Dropdown option sets for the DOB step ────────────────────────────────
@@ -429,9 +430,15 @@ function EllaAsk({
   hint?: string;
   theme: ReturnType<typeof useTheme>;
 }) {
+  const { width } = useWindowDimensions();
+  // Size the standee from the screen width (capped) instead of a fixed 210 so
+  // she never eats more than ~40% of narrow Android screens — that fixed width
+  // was crowding the speech bubble and wrapping its text into cramped lines.
+  const figW = Math.min(216, Math.round(width * 0.45));
+  const figH = Math.round(figW * (175 / 210));
   return (
     <View style={styles.askRow}>
-      <Image source={ELLA.ask} style={styles.askFigure} resizeMode="contain" />
+      <Image source={ELLA.ask} style={[styles.askFigure, { width: figW, height: figH }]} resizeMode="contain" />
       <View style={[styles.askBubble, { backgroundColor: theme.backgroundElement }, softShadow]}>
         <ThemedText type="smallBold" style={{ color: ELLA.color }}>
           {ELLA.name}
@@ -478,7 +485,9 @@ const styles = StyleSheet.create({
   askRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 0, marginBottom: Spacing.three },
   // zIndex/elevation keep Ella in front so the bubble tucks behind her (the
   // bubble's softShadow uses elevation 3, so she needs a higher value on Android).
-  askFigure: { width: 210, height: 175, zIndex: 2, elevation: 4 },
+  // Width/height are set responsively in EllaAsk. The negative left margin pulls
+  // her toward the screen edge so the bubble gets the extra horizontal room.
+  askFigure: { marginLeft: -Spacing.three, zIndex: 2, elevation: 4 },
   askBubble: { flex: 1, borderRadius: Spacing.four, padding: Spacing.three, gap: 2, marginBottom: Spacing.two, marginLeft: -16 },
   askQuestion: { fontSize: 20, lineHeight: 27, fontWeight: '700' },
 
